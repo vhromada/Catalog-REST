@@ -29,6 +29,8 @@ public class GenreController extends AbstractCatalogController {
 
     /**
      * Creates new data.
+     *
+     * @return response status
      */
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     public ResponseEntity<Void> newData() {
@@ -63,6 +65,7 @@ public class GenreController extends AbstractCatalogController {
      * Adds genre. Sets new ID and position.
      *
      * @param genre genre
+     * @return response status
      * @throws IllegalArgumentException                              if genre is null
      * @throws cz.vhromada.validators.exceptions.ValidationException if ID isn't null
      *                                                               or name is null
@@ -79,6 +82,7 @@ public class GenreController extends AbstractCatalogController {
      * Adds list of genre names.
      *
      * @param genre genre
+     * @return response status
      * @throws IllegalArgumentException                              if list of genre names is null
      * @throws cz.vhromada.validators.exceptions.ValidationException if list of genre names contains null value
      */
@@ -93,6 +97,7 @@ public class GenreController extends AbstractCatalogController {
      * Updates genre.
      *
      * @param genre new value of genre
+     * @return response status
      * @throws IllegalArgumentException                                  if genre is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or name is null
@@ -110,6 +115,7 @@ public class GenreController extends AbstractCatalogController {
      * Removes genre.
      *
      * @param genre genre
+     * @return response status
      * @throws IllegalArgumentException                                  if genre is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
@@ -125,6 +131,7 @@ public class GenreController extends AbstractCatalogController {
      * Duplicates genre.
      *
      * @param genre genre
+     * @return response status
      * @throws IllegalArgumentException                                  if genre is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
@@ -140,6 +147,7 @@ public class GenreController extends AbstractCatalogController {
      * Moves genre in list one position up.
      *
      * @param genre genre
+     * @return response status
      * @throws IllegalArgumentException                                  if genre is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or genre can't be moved up
@@ -156,6 +164,7 @@ public class GenreController extends AbstractCatalogController {
      * Moves genre in list one position down.
      *
      * @param genre genre
+     * @return response status
      * @throws IllegalArgumentException                                  if genre is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or genre can't be moved down
@@ -170,6 +179,8 @@ public class GenreController extends AbstractCatalogController {
 
     /**
      * Updates positions.
+     *
+     * @return response status
      */
     @RequestMapping(value = "/updatePositions", method = RequestMethod.GET)
     public ResponseEntity<Void> updatePositions() {

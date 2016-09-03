@@ -29,6 +29,8 @@ public class ProgramController extends AbstractCatalogController {
 
     /**
      * Creates new data.
+     *
+     * @return response status
      */
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     public ResponseEntity<Void> newData() {
@@ -63,6 +65,7 @@ public class ProgramController extends AbstractCatalogController {
      * Adds program. Sets new ID and position.
      *
      * @param program program
+     * @return response status
      * @throws IllegalArgumentException                              if program is null
      * @throws cz.vhromada.validators.exceptions.ValidationException if ID isn't null
      *                                                               or name is null
@@ -84,6 +87,7 @@ public class ProgramController extends AbstractCatalogController {
      * Updates program.
      *
      * @param program new value of program
+     * @return response status
      * @throws IllegalArgumentException                                  if program is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or name is null
@@ -106,6 +110,7 @@ public class ProgramController extends AbstractCatalogController {
      * Removes program.
      *
      * @param program program
+     * @return response status
      * @throws IllegalArgumentException                                  if program is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if program doesn't exist in data storage
@@ -121,6 +126,7 @@ public class ProgramController extends AbstractCatalogController {
      * Duplicates program.
      *
      * @param program program
+     * @return response status
      * @throws IllegalArgumentException                                  if program is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if program doesn't exist in data storage
@@ -136,6 +142,7 @@ public class ProgramController extends AbstractCatalogController {
      * Moves program in list one position up.
      *
      * @param program program
+     * @return response status
      * @throws IllegalArgumentException                                  if program is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or program can't be moved up
@@ -152,6 +159,7 @@ public class ProgramController extends AbstractCatalogController {
      * Moves program in list one position down.
      *
      * @param program program
+     * @return response status
      * @throws IllegalArgumentException                                  if program is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or program can't be moved down
@@ -166,6 +174,8 @@ public class ProgramController extends AbstractCatalogController {
 
     /**
      * Updates positions.
+     *
+     * @return response status
      */
     @RequestMapping(value = "/updatePositions", method = RequestMethod.GET)
     public ResponseEntity<Void> updatePositions() {

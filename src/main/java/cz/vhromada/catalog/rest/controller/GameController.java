@@ -29,6 +29,8 @@ public class GameController extends AbstractCatalogController {
 
     /**
      * Creates new data.
+     *
+     * @return response status
      */
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     public ResponseEntity<Void> newData() {
@@ -63,6 +65,7 @@ public class GameController extends AbstractCatalogController {
      * Adds game. Sets new ID and position.
      *
      * @param game game
+     * @return response status
      * @throws IllegalArgumentException                              if game is null
      * @throws cz.vhromada.validators.exceptions.ValidationException if ID isn't null
      *                                                               or name is null
@@ -84,6 +87,7 @@ public class GameController extends AbstractCatalogController {
      * Updates game.
      *
      * @param game new value of game
+     * @return response status
      * @throws IllegalArgumentException                                  if game is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or name is null
@@ -106,6 +110,7 @@ public class GameController extends AbstractCatalogController {
      * Removes game.
      *
      * @param game game
+     * @return response status
      * @throws IllegalArgumentException                                  if game is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if game doesn't exist in data storage
@@ -121,6 +126,7 @@ public class GameController extends AbstractCatalogController {
      * Duplicates game.
      *
      * @param game game
+     * @return response status
      * @throws IllegalArgumentException                                  if game is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if game doesn't exist in data storage
@@ -136,6 +142,7 @@ public class GameController extends AbstractCatalogController {
      * Moves game in list one position up.
      *
      * @param game game
+     * @return response status
      * @throws IllegalArgumentException                                  if game is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or game can't be moved up
@@ -152,6 +159,7 @@ public class GameController extends AbstractCatalogController {
      * Moves game in list one position down.
      *
      * @param game game
+     * @return response status
      * @throws IllegalArgumentException                                  if game is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or game can't be moved down
@@ -166,6 +174,8 @@ public class GameController extends AbstractCatalogController {
 
     /**
      * Updates positions.
+     *
+     * @return response status
      */
     @RequestMapping(value = "/updatePositions", method = RequestMethod.GET)
     public ResponseEntity<Void> updatePositions() {

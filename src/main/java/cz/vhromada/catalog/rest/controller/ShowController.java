@@ -29,6 +29,8 @@ public class ShowController extends AbstractCatalogController {
 
     /**
      * Creates new data.
+     *
+     * @return response status
      */
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     public ResponseEntity<Void> newData() {
@@ -63,6 +65,7 @@ public class ShowController extends AbstractCatalogController {
      * Adds show. Sets new ID and position.
      *
      * @param show show
+     * @return response status
      * @throws IllegalArgumentException                                  if show is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID isn't null
      *                                                                   or czech name is null
@@ -97,6 +100,7 @@ public class ShowController extends AbstractCatalogController {
      * Updates show.
      *
      * @param show new value of show
+     * @return response status
      * @throws IllegalArgumentException                                  if show is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or czech name is null
@@ -133,6 +137,7 @@ public class ShowController extends AbstractCatalogController {
      * Removes show.
      *
      * @param show show
+     * @return response status
      * @throws IllegalArgumentException                                  if show is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if show doesn't exist in data storage
@@ -148,6 +153,7 @@ public class ShowController extends AbstractCatalogController {
      * Duplicates show.
      *
      * @param show show
+     * @return response status
      * @throws IllegalArgumentException                                  if show is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if show doesn't exist in data storage
@@ -163,6 +169,7 @@ public class ShowController extends AbstractCatalogController {
      * Moves show in list one position up.
      *
      * @param show show
+     * @return response status
      * @throws IllegalArgumentException                                  if show is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or show can't be moved up
@@ -179,6 +186,7 @@ public class ShowController extends AbstractCatalogController {
      * Moves show in list one position down.
      *
      * @param show show
+     * @return response status
      * @throws IllegalArgumentException                                  if show is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or show can't be moved down
@@ -193,6 +201,8 @@ public class ShowController extends AbstractCatalogController {
 
     /**
      * Updates positions.
+     *
+     * @return response status
      */
     @RequestMapping(value = "/updatePositions", method = RequestMethod.GET)
     public ResponseEntity<Void> updatePositions() {

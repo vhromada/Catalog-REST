@@ -47,6 +47,7 @@ public class SongController extends AbstractCatalogController {
      *
      * @param musicId music ID
      * @param song    song
+     * @return response status
      * @throws IllegalArgumentException                                  if song is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if music ID is null
      *                                                                   or song ID isn't null
@@ -71,6 +72,7 @@ public class SongController extends AbstractCatalogController {
      *
      * @param musicId music ID
      * @param song    new value of song
+     * @return response status
      * @throws IllegalArgumentException                                  if song is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if song ID is null
      *                                                                   or name is null
@@ -91,6 +93,7 @@ public class SongController extends AbstractCatalogController {
      *
      * @param musicId music ID
      * @param song    song
+     * @return response status
      * @throws IllegalArgumentException                                  if song is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if song doesn't exist in data storage
@@ -107,6 +110,7 @@ public class SongController extends AbstractCatalogController {
      *
      * @param musicId music ID
      * @param song    song
+     * @return response status
      * @throws IllegalArgumentException                                  if song is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if song doesn't exist in data storage
@@ -123,6 +127,7 @@ public class SongController extends AbstractCatalogController {
      *
      * @param musicId music ID
      * @param song    song
+     * @return response status
      * @throws IllegalArgumentException                                  if song is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or song can't be moved up
@@ -140,6 +145,7 @@ public class SongController extends AbstractCatalogController {
      *
      * @param musicId music ID
      * @param song    song
+     * @return response status
      * @throws IllegalArgumentException                                  if song is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or song can't be moved down

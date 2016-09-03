@@ -49,6 +49,7 @@ public class EpisodeController extends AbstractCatalogController {
      * @param showId   show ID
      * @param seasonId season ID
      * @param episode  episode
+     * @return response status
      * @throws IllegalArgumentException                                  if episode is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if season ID is null
      *                                                                   or episode ID isn't null
@@ -76,6 +77,7 @@ public class EpisodeController extends AbstractCatalogController {
      * @param showId   show ID
      * @param seasonId season ID
      * @param episode  new value of episode
+     * @return response status
      * @throws IllegalArgumentException                                  if episode is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if episode ID is null
      *                                                                   or number of episode isn't positive number
@@ -99,6 +101,7 @@ public class EpisodeController extends AbstractCatalogController {
      * @param showId   show ID
      * @param seasonId season ID
      * @param episode  episode
+     * @return response status
      * @throws IllegalArgumentException                                  if episode is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if episode doesn't exist in data storage
@@ -117,6 +120,7 @@ public class EpisodeController extends AbstractCatalogController {
      * @param showId   show ID
      * @param seasonId season ID
      * @param episode  episode
+     * @return response status
      * @throws IllegalArgumentException                                  if episode is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if episode doesn't exist in data storage
@@ -135,6 +139,7 @@ public class EpisodeController extends AbstractCatalogController {
      * @param showId   show ID
      * @param seasonId season ID
      * @param episode  episode
+     * @return response status
      * @throws IllegalArgumentException                                  if episode is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or episode can't be moved up
@@ -154,6 +159,7 @@ public class EpisodeController extends AbstractCatalogController {
      * @param showId   show ID
      * @param seasonId season ID
      * @param episode  episode
+     * @return response status
      * @throws IllegalArgumentException                                  if episode is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or episode can't be moved down

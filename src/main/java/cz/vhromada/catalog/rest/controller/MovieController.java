@@ -29,6 +29,8 @@ public class MovieController extends AbstractCatalogController {
 
     /**
      * Creates new data.
+     *
+     * @return response status
      */
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     public ResponseEntity<Void> newData() {
@@ -63,6 +65,7 @@ public class MovieController extends AbstractCatalogController {
      * Adds movie. Sets new ID and position.
      *
      * @param movie movie
+     * @return response status
      * @throws IllegalArgumentException                                  if movie is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID isn't null
      *                                                                   or czech name is null
@@ -100,6 +103,7 @@ public class MovieController extends AbstractCatalogController {
      * Updates movie.
      *
      * @param movie new value of movie
+     * @return response status
      * @throws IllegalArgumentException                                  if movie is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or czech name is null
@@ -138,6 +142,7 @@ public class MovieController extends AbstractCatalogController {
      * Removes movie.
      *
      * @param movie movie
+     * @return response status
      * @throws IllegalArgumentException                                  if movie is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if movie doesn't exist in data storage
@@ -153,6 +158,7 @@ public class MovieController extends AbstractCatalogController {
      * Duplicates movie.
      *
      * @param movie movie
+     * @return response status
      * @throws IllegalArgumentException                                  if movie is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if movie doesn't exist in data storage
@@ -168,6 +174,7 @@ public class MovieController extends AbstractCatalogController {
      * Moves movie in list one position up.
      *
      * @param movie movie
+     * @return response status
      * @throws IllegalArgumentException                                  if movie is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or movie can't be moved up
@@ -184,6 +191,7 @@ public class MovieController extends AbstractCatalogController {
      * Moves movie in list one position down.
      *
      * @param movie movie
+     * @return response status
      * @throws IllegalArgumentException                                  if movie is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or movie can't be moved down
@@ -198,6 +206,8 @@ public class MovieController extends AbstractCatalogController {
 
     /**
      * Updates positions.
+     *
+     * @return response status
      */
     @RequestMapping(value = "/updatePositions", method = RequestMethod.GET)
     public ResponseEntity<Void> updatePositions() {

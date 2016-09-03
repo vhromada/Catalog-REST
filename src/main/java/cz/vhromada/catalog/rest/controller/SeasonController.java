@@ -47,6 +47,7 @@ public class SeasonController extends AbstractCatalogController {
      *
      * @param showId show ID
      * @param season season
+     * @return response status
      * @throws IllegalArgumentException                                  if season is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if show ID is null
      *                                                                   or season ID isn't null
@@ -75,6 +76,7 @@ public class SeasonController extends AbstractCatalogController {
      *
      * @param showId show ID
      * @param season new value of season
+     * @return response status
      * @throws IllegalArgumentException                                  if season is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if season ID is null
      *                                                                   or number of season isn't positive number
@@ -100,6 +102,7 @@ public class SeasonController extends AbstractCatalogController {
      *
      * @param showId show ID
      * @param season season
+     * @return response status
      * @throws IllegalArgumentException                                  if season is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if season doesn't exist in data storage
@@ -116,6 +119,7 @@ public class SeasonController extends AbstractCatalogController {
      *
      * @param showId show ID
      * @param season season
+     * @return response status
      * @throws IllegalArgumentException                                  if season is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if season doesn't exist in data storage
@@ -132,6 +136,7 @@ public class SeasonController extends AbstractCatalogController {
      *
      * @param showId show ID
      * @param season season
+     * @return response status
      * @throws IllegalArgumentException                                  if season is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or season can't be moved up
@@ -149,6 +154,7 @@ public class SeasonController extends AbstractCatalogController {
      *
      * @param showId show ID
      * @param season season
+     * @return response status
      * @throws IllegalArgumentException                                  if season is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or season can't be moved down
