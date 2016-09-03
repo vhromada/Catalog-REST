@@ -5,8 +5,11 @@ import cz.vhromada.catalog.facade.to.MusicTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -17,7 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller("musicController")
 @RequestMapping("/music")
-public class MusicController extends JsonController {
+@CrossOrigin
+public class MusicController extends AbstractCatalogController {
 
     @Autowired
     @Qualifier("musicFacade")
@@ -27,8 +31,10 @@ public class MusicController extends JsonController {
      * Creates new data.
      */
     @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public void newData() {
+    public ResponseEntity<Void> newData() {
         musicFacade.newData();
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -37,8 +43,8 @@ public class MusicController extends JsonController {
      * @return list of music
      */
     @RequestMapping(value = { "", "/", "list" }, method = RequestMethod.GET)
-    public String getMusic() {
-        return serialize(musicFacade.getMusic());
+    public ResponseEntity<String> getMusic() {
+        return getDataResponseEntity(musicFacade.getMusic());
     }
 
     /**
@@ -49,8 +55,8 @@ public class MusicController extends JsonController {
      * @throws IllegalArgumentException if ID is null
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public String getMusic(@PathVariable("id") final Integer id) {
-        return serialize(musicFacade.getMusic(id));
+    public ResponseEntity<String> getMusic(@PathVariable("id") final Integer id) {
+        return getDataResponseEntity(musicFacade.getMusic(id));
     }
 
     /**
@@ -67,8 +73,10 @@ public class MusicController extends JsonController {
      *                                                               or note is null
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public void add(final String music) {
+    public ResponseEntity<Void> add(@RequestBody final String music) {
         musicFacade.add(deserialize(music, MusicTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -86,8 +94,10 @@ public class MusicController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public void update(final String music) {
+    public ResponseEntity<Void> update(@RequestBody final String music) {
         musicFacade.update(deserialize(music, MusicTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -99,8 +109,10 @@ public class MusicController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
      */
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    public void remove(final String music) {
+    public ResponseEntity<Void> remove(@RequestBody final String music) {
         musicFacade.remove(deserialize(music, MusicTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -112,8 +124,10 @@ public class MusicController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
      */
     @RequestMapping(value = "/duplicate", method = RequestMethod.POST)
-    public void duplicate(final String music) {
+    public ResponseEntity<Void> duplicate(@RequestBody final String music) {
         musicFacade.duplicate(deserialize(music, MusicTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -126,8 +140,10 @@ public class MusicController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
      */
     @RequestMapping(value = "/moveUp", method = RequestMethod.POST)
-    public void moveUp(final String music) {
+    public ResponseEntity<Void> moveUp(@RequestBody final String music) {
         musicFacade.moveUp(deserialize(music, MusicTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -140,16 +156,20 @@ public class MusicController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
      */
     @RequestMapping(value = "/moveDown", method = RequestMethod.POST)
-    public void moveDown(final String music) {
+    public ResponseEntity<Void> moveDown(@RequestBody final String music) {
         musicFacade.moveDown(deserialize(music, MusicTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
      * Updates positions.
      */
     @RequestMapping(value = "/updatePositions", method = RequestMethod.GET)
-    public void updatePositions() {
+    public ResponseEntity<Void> updatePositions() {
         musicFacade.updatePositions();
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -158,8 +178,8 @@ public class MusicController extends JsonController {
      * @return total count of media
      */
     @RequestMapping(value = "/totalMedia", method = RequestMethod.GET)
-    public String getTotalMediaCount() {
-        return serialize(musicFacade.getTotalMediaCount());
+    public ResponseEntity<String> getTotalMediaCount() {
+        return getDataResponseEntity(musicFacade.getTotalMediaCount());
     }
 
     /**
@@ -168,8 +188,8 @@ public class MusicController extends JsonController {
      * @return total length of all music
      */
     @RequestMapping(value = "/totalLength", method = RequestMethod.GET)
-    public String getTotalLength() {
-        return serialize(musicFacade.getTotalLength());
+    public ResponseEntity<String> getTotalLength() {
+        return getDataResponseEntity(musicFacade.getTotalLength());
     }
 
     /**
@@ -178,8 +198,8 @@ public class MusicController extends JsonController {
      * @return count of songs from all music
      */
     @RequestMapping(value = "/songsCount", method = RequestMethod.GET)
-    public String getSongsCount() {
-        return serialize(musicFacade.getSongsCount());
+    public ResponseEntity<String> getSongsCount() {
+        return getDataResponseEntity(musicFacade.getSongsCount());
     }
 
 }

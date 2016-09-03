@@ -6,8 +6,11 @@ import cz.vhromada.catalog.facade.to.SongTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -18,7 +21,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller("songController")
 @RequestMapping("/music/{musicId}/songs")
-public class SongController extends JsonController {
+@CrossOrigin
+public class SongController extends AbstractCatalogController {
 
     @Autowired
     @Qualifier("songFacade")
@@ -33,8 +37,9 @@ public class SongController extends JsonController {
      * @throws IllegalArgumentException if ID is null
      */
     @RequestMapping(value = "/{songId}", method = RequestMethod.GET)
-    public String getSong(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @PathVariable("songId") final Integer songId) {
-        return serialize(songFacade.getSong(songId));
+    public ResponseEntity<String> getSong(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId,
+            @PathVariable("songId") final Integer songId) {
+        return getDataResponseEntity(songFacade.getSong(songId));
     }
 
     /**
@@ -52,11 +57,13 @@ public class SongController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public void add(@PathVariable("musicId") final Integer musicId, final String song) {
+    public ResponseEntity<Void> add(@PathVariable("musicId") final Integer musicId, @RequestBody final String song) {
         final MusicTO music = new MusicTO();
         music.setId(musicId);
 
         songFacade.add(music, deserialize(song, SongTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -73,8 +80,10 @@ public class SongController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if song doesn't exist in data storage
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public void update(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, final String song) {
+    public ResponseEntity<Void> update(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final String song) {
         songFacade.update(deserialize(song, SongTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -87,8 +96,10 @@ public class SongController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if song doesn't exist in data storage
      */
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    public void remove(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, final String song) {
+    public ResponseEntity<Void> remove(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final String song) {
         songFacade.remove(deserialize(song, SongTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -101,8 +112,10 @@ public class SongController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if song doesn't exist in data storage
      */
     @RequestMapping(value = "/duplicate", method = RequestMethod.POST)
-    public void duplicate(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, final String song) {
+    public ResponseEntity<Void> duplicate(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final String song) {
         songFacade.duplicate(deserialize(song, SongTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -116,8 +129,10 @@ public class SongController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if song doesn't exist in data storage
      */
     @RequestMapping(value = "/moveUp", method = RequestMethod.POST)
-    public void moveUp(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, final String song) {
+    public ResponseEntity<Void> moveUp(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final String song) {
         songFacade.moveUp(deserialize(song, SongTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -131,8 +146,10 @@ public class SongController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if song doesn't exist in data storage
      */
     @RequestMapping(value = "/moveDown", method = RequestMethod.POST)
-    public void moveDown(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, final String song) {
+    public ResponseEntity<Void> moveDown(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final String song) {
         songFacade.moveDown(deserialize(song, SongTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -145,11 +162,11 @@ public class SongController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
      */
     @RequestMapping(value = { "", "/", "list" }, method = RequestMethod.GET)
-    public String findSongsByMusic(@PathVariable("musicId") final Integer musicId) {
+    public ResponseEntity<String> findSongsByMusic(@PathVariable("musicId") final Integer musicId) {
         final MusicTO music = new MusicTO();
         music.setId(musicId);
 
-        return serialize(songFacade.findSongsByMusic(music));
+        return getDataResponseEntity(songFacade.findSongsByMusic(music));
     }
 
 }

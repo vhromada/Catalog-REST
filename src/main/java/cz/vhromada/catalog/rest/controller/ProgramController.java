@@ -5,8 +5,11 @@ import cz.vhromada.catalog.facade.to.ProgramTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -17,7 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller("programController")
 @RequestMapping("/programs")
-public class ProgramController extends JsonController {
+@CrossOrigin
+public class ProgramController extends AbstractCatalogController {
 
     @Autowired
     @Qualifier("programFacade")
@@ -27,8 +31,10 @@ public class ProgramController extends JsonController {
      * Creates new data.
      */
     @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public void newData() {
+    public ResponseEntity<Void> newData() {
         programFacade.newData();
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -37,8 +43,8 @@ public class ProgramController extends JsonController {
      * @return list of programs
      */
     @RequestMapping(value = { "", "/", "list" }, method = RequestMethod.GET)
-    public String getPrograms() {
-        return serialize(programFacade.getPrograms());
+    public ResponseEntity<String> getPrograms() {
+        return getDataResponseEntity(programFacade.getPrograms());
     }
 
     /**
@@ -49,8 +55,8 @@ public class ProgramController extends JsonController {
      * @throws IllegalArgumentException if ID is null
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public String getProgram(@PathVariable("id") final Integer id) {
-        return serialize(programFacade.getProgram(id));
+    public ResponseEntity<String> getProgram(@PathVariable("id") final Integer id) {
+        return getDataResponseEntity(programFacade.getProgram(id));
     }
 
     /**
@@ -68,8 +74,10 @@ public class ProgramController extends JsonController {
      *                                                               or note is null
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public void add(final String program) {
+    public ResponseEntity<Void> add(@RequestBody final String program) {
         programFacade.add(deserialize(program, ProgramTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -88,8 +96,10 @@ public class ProgramController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if program doesn't exist in data storage
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public void update(final String program) {
+    public ResponseEntity<Void> update(@RequestBody final String program) {
         programFacade.update(deserialize(program, ProgramTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -101,8 +111,10 @@ public class ProgramController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if program doesn't exist in data storage
      */
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    public void remove(final String program) {
+    public ResponseEntity<Void> remove(@RequestBody final String program) {
         programFacade.remove(deserialize(program, ProgramTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -114,8 +126,10 @@ public class ProgramController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if program doesn't exist in data storage
      */
     @RequestMapping(value = "/duplicate", method = RequestMethod.POST)
-    public void duplicate(final String program) {
+    public ResponseEntity<Void> duplicate(@RequestBody final String program) {
         programFacade.duplicate(deserialize(program, ProgramTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -128,8 +142,10 @@ public class ProgramController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if program doesn't exist in data storage
      */
     @RequestMapping(value = "/moveUp", method = RequestMethod.POST)
-    public void moveUp(final String program) {
+    public ResponseEntity<Void> moveUp(@RequestBody final String program) {
         programFacade.moveUp(deserialize(program, ProgramTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -142,16 +158,20 @@ public class ProgramController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if program doesn't exist in data storage
      */
     @RequestMapping(value = "/moveDown", method = RequestMethod.POST)
-    public void moveDown(final String program) {
+    public ResponseEntity<Void> moveDown(@RequestBody final String program) {
         programFacade.moveDown(deserialize(program, ProgramTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
      * Updates positions.
      */
     @RequestMapping(value = "/updatePositions", method = RequestMethod.GET)
-    public void updatePositions() {
+    public ResponseEntity<Void> updatePositions() {
         programFacade.updatePositions();
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -160,8 +180,8 @@ public class ProgramController extends JsonController {
      * @return total count of media
      */
     @RequestMapping(value = "/totalMedia", method = RequestMethod.GET)
-    public String getTotalMediaCount() {
-        return serialize(programFacade.getTotalMediaCount());
+    public ResponseEntity<String> getTotalMediaCount() {
+        return getDataResponseEntity(programFacade.getTotalMediaCount());
     }
 
 }

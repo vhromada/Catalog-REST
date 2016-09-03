@@ -5,7 +5,10 @@ import cz.vhromada.catalog.facade.to.GenreTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController("genreController")
 @RequestMapping("/genres")
-public class GenreController extends JsonController {
+@CrossOrigin
+public class GenreController extends AbstractCatalogController {
 
     @Autowired
     @Qualifier("genreFacade")
@@ -27,8 +31,10 @@ public class GenreController extends JsonController {
      * Creates new data.
      */
     @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public void newData() {
+    public ResponseEntity<Void> newData() {
         genreFacade.newData();
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -37,8 +43,8 @@ public class GenreController extends JsonController {
      * @return list of genres
      */
     @RequestMapping(value = { "", "/", "list" }, method = RequestMethod.GET)
-    public String getGenres() {
-        return serialize(genreFacade.getGenres());
+    public ResponseEntity<String> getGenres() {
+        return getDataResponseEntity(genreFacade.getGenres());
     }
 
     /**
@@ -49,8 +55,8 @@ public class GenreController extends JsonController {
      * @throws IllegalArgumentException if ID is null
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public String getGenre(@PathVariable("id") final Integer id) {
-        return serialize(genreFacade.getGenre(id));
+    public ResponseEntity<String> getGenre(@PathVariable("id") final Integer id) {
+        return getDataResponseEntity(genreFacade.getGenre(id));
     }
 
     /**
@@ -63,8 +69,10 @@ public class GenreController extends JsonController {
      *                                                               or name is empty string
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public void add(final String genre) {
+    public ResponseEntity<Void> add(@RequestBody final String genre) {
         genreFacade.add(deserialize(genre, GenreTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -75,8 +83,10 @@ public class GenreController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.ValidationException if list of genre names contains null value
      */
     @RequestMapping(value = "/addList", method = RequestMethod.POST)
-    public void addList(final String genre) {
+    public ResponseEntity<Void> addList(@RequestBody final String genre) {
         genreFacade.add(this.deserializeList(genre));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -90,8 +100,10 @@ public class GenreController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public void update(final String genre) {
+    public ResponseEntity<Void> update(@RequestBody final String genre) {
         genreFacade.update(deserialize(genre, GenreTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -103,8 +115,10 @@ public class GenreController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
      */
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    public void remove(final String genre) {
+    public ResponseEntity<Void> remove(@RequestBody final String genre) {
         genreFacade.remove(deserialize(genre, GenreTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -116,8 +130,10 @@ public class GenreController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
      */
     @RequestMapping(value = "/duplicate", method = RequestMethod.POST)
-    public void duplicate(final String genre) {
+    public ResponseEntity<Void> duplicate(@RequestBody final String genre) {
         genreFacade.duplicate(deserialize(genre, GenreTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -130,8 +146,10 @@ public class GenreController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
      */
     @RequestMapping(value = "/moveUp", method = RequestMethod.POST)
-    public void moveUp(final String genre) {
+    public ResponseEntity<Void> moveUp(@RequestBody final String genre) {
         genreFacade.moveUp(deserialize(genre, GenreTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -144,16 +162,20 @@ public class GenreController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
      */
     @RequestMapping(value = "/moveDown", method = RequestMethod.POST)
-    public void moveDown(final String genre) {
+    public ResponseEntity<Void> moveDown(@RequestBody final String genre) {
         genreFacade.moveDown(deserialize(genre, GenreTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
      * Updates positions.
      */
     @RequestMapping(value = "/updatePositions", method = RequestMethod.GET)
-    public void updatePositions() {
+    public ResponseEntity<Void> updatePositions() {
         genreFacade.updatePositions();
+
+        return getEmptyResponseEntity();
     }
 
 }

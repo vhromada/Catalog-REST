@@ -6,19 +6,23 @@ import cz.vhromada.catalog.facade.to.SeasonTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * A class represents controller for episodes.
  *
  * @author Vladimir Hromada
  */
-@Controller("episodeController")
+@RestController("episodeController")
 @RequestMapping("/shows/{showId}/seasons/{seasonId}/episodes")
-public class EpisodeController extends JsonController {
+@CrossOrigin
+public class EpisodeController extends AbstractCatalogController {
 
     @Autowired
     @Qualifier("episodeFacade")
@@ -34,9 +38,9 @@ public class EpisodeController extends JsonController {
      * @throws IllegalArgumentException if episode ID is null
      */
     @RequestMapping(value = "/{episodeId}", method = RequestMethod.GET)
-    public String getEpisode(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+    public ResponseEntity<String> getEpisode(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
             @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @PathVariable("episodeId") final Integer episodeId) {
-        return serialize(episodeFacade.getEpisode(episodeId));
+        return getDataResponseEntity(episodeFacade.getEpisode(episodeId));
     }
 
     /**
@@ -55,13 +59,15 @@ public class EpisodeController extends JsonController {
      *                                                                   or note is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if season doesn't exist in data storage
      */
-    @RequestMapping(value = "/addg", method = RequestMethod.POST)
-    public void add(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
-            @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, final String episode) {
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public ResponseEntity<Void> add(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+            @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final String episode) {
         final SeasonTO season = new SeasonTO();
         season.setId(seasonId);
 
         episodeFacade.add(season, deserialize(episode, EpisodeTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -80,9 +86,11 @@ public class EpisodeController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if episode doesn't exist in data storage
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public void update(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
-            @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, final String episode) {
+    public ResponseEntity<Void> update(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+            @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final String episode) {
         episodeFacade.update(deserialize(episode, EpisodeTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -96,9 +104,11 @@ public class EpisodeController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if episode doesn't exist in data storage
      */
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    public void remove(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
-            @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, final String episode) {
+    public ResponseEntity<Void> remove(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+            @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final String episode) {
         episodeFacade.remove(deserialize(episode, EpisodeTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -112,9 +122,11 @@ public class EpisodeController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if episode doesn't exist in data storage
      */
     @RequestMapping(value = "/duplicate", method = RequestMethod.POST)
-    public void duplicate(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
-            @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, final String episode) {
+    public ResponseEntity<Void> duplicate(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+            @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final String episode) {
         episodeFacade.duplicate(deserialize(episode, EpisodeTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -129,9 +141,11 @@ public class EpisodeController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if episode doesn't exist in data storage
      */
     @RequestMapping(value = "/moveUp", method = RequestMethod.POST)
-    public void moveUp(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
-            @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, final String episode) {
+    public ResponseEntity<Void> moveUp(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+            @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final String episode) {
         episodeFacade.moveUp(deserialize(episode, EpisodeTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -146,9 +160,11 @@ public class EpisodeController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if episode doesn't exist in data storage
      */
     @RequestMapping(value = "/moveDown", method = RequestMethod.POST)
-    public void moveDown(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
-            @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, final String episode) {
+    public ResponseEntity<Void> moveDown(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+            @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final String episode) {
         episodeFacade.moveDown(deserialize(episode, EpisodeTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -162,12 +178,12 @@ public class EpisodeController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if season doesn't exist in data storage
      */
     @RequestMapping(value = { "", "/", "list" }, method = RequestMethod.GET)
-    public String findEpisodesBySeason(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+    public ResponseEntity<String> findEpisodesBySeason(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
             @PathVariable("seasonId") final Integer seasonId) {
         final SeasonTO season = new SeasonTO();
         season.setId(seasonId);
 
-        return serialize(episodeFacade.findEpisodesBySeason(season));
+        return getDataResponseEntity(episodeFacade.findEpisodesBySeason(season));
     }
 
 }

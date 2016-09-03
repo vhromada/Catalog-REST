@@ -12,7 +12,7 @@ import org.springframework.beans.factory.InitializingBean;
  *
  * @author Vladimir Hromada
  */
-public class JsonController implements InitializingBean {
+public abstract class JsonController implements InitializingBean {
 
     private Genson genson;
 

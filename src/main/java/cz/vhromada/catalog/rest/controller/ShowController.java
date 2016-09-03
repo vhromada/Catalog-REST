@@ -5,8 +5,11 @@ import cz.vhromada.catalog.facade.to.ShowTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -17,7 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller("showController")
 @RequestMapping("/shows")
-public class ShowController extends JsonController {
+@CrossOrigin
+public class ShowController extends AbstractCatalogController {
 
     @Autowired
     @Qualifier("showFacade")
@@ -27,8 +31,10 @@ public class ShowController extends JsonController {
      * Creates new data.
      */
     @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public void newData() {
+    public ResponseEntity<Void> newData() {
         showFacade.newData();
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -37,8 +43,8 @@ public class ShowController extends JsonController {
      * @return list of shows
      */
     @RequestMapping(value = { "", "/", "list" }, method = RequestMethod.GET)
-    public String getShows() {
-        return serialize(showFacade.getShows());
+    public ResponseEntity<String> getShows() {
+        return getDataResponseEntity(showFacade.getShows());
     }
 
     /**
@@ -49,8 +55,8 @@ public class ShowController extends JsonController {
      * @throws IllegalArgumentException if ID is null
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public String getShow(@PathVariable("id") final Integer id) {
-        return serialize(showFacade.getShow(id));
+    public ResponseEntity<String> getShow(@PathVariable("id") final Integer id) {
+        return getDataResponseEntity(showFacade.getShow(id));
     }
 
     /**
@@ -81,8 +87,10 @@ public class ShowController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public void add(final String show) {
+    public ResponseEntity<Void> add(@RequestBody final String show) {
         showFacade.add(deserialize(show, ShowTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -115,8 +123,10 @@ public class ShowController extends JsonController {
      *                                                                   or genre doesn't exist in data storage
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public void update(final String show) {
+    public ResponseEntity<Void> update(@RequestBody final String show) {
         showFacade.update(deserialize(show, ShowTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -128,8 +138,10 @@ public class ShowController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if show doesn't exist in data storage
      */
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    public void remove(final String show) {
+    public ResponseEntity<Void> remove(@RequestBody final String show) {
         showFacade.remove(deserialize(show, ShowTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -141,8 +153,10 @@ public class ShowController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if show doesn't exist in data storage
      */
     @RequestMapping(value = "/duplicate", method = RequestMethod.POST)
-    public void duplicate(final String show) {
+    public ResponseEntity<Void> duplicate(@RequestBody final String show) {
         showFacade.duplicate(deserialize(show, ShowTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -155,8 +169,10 @@ public class ShowController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if show doesn't exist in data storage
      */
     @RequestMapping(value = "/moveUp", method = RequestMethod.POST)
-    public void moveUp(final String show) {
+    public ResponseEntity<Void> moveUp(@RequestBody final String show) {
         showFacade.moveUp(deserialize(show, ShowTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -169,16 +185,20 @@ public class ShowController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if show doesn't exist in data storage
      */
     @RequestMapping(value = "/moveDown", method = RequestMethod.POST)
-    public void moveDown(final String show) {
+    public ResponseEntity<Void> moveDown(@RequestBody final String show) {
         showFacade.moveDown(deserialize(show, ShowTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
      * Updates positions.
      */
     @RequestMapping(value = "/updatePositions", method = RequestMethod.GET)
-    public void updatePositions() {
+    public ResponseEntity<Void> updatePositions() {
         showFacade.updatePositions();
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -187,8 +207,8 @@ public class ShowController extends JsonController {
      * @return total length of all shows
      */
     @RequestMapping(value = "/totalLength", method = RequestMethod.GET)
-    public String getTotalLength() {
-        return serialize(showFacade.getTotalLength());
+    public ResponseEntity<String> getTotalLength() {
+        return getDataResponseEntity(showFacade.getTotalLength());
     }
 
     /**
@@ -197,8 +217,8 @@ public class ShowController extends JsonController {
      * @return count of seasons from all shows
      */
     @RequestMapping(value = "/seasonsCount", method = RequestMethod.GET)
-    public String getSeasonsCount() {
-        return serialize(showFacade.getSeasonsCount());
+    public ResponseEntity<String> getSeasonsCount() {
+        return getDataResponseEntity(showFacade.getSeasonsCount());
     }
 
     /**
@@ -207,8 +227,8 @@ public class ShowController extends JsonController {
      * @return count of episodes from all shows
      */
     @RequestMapping(value = "/episodesCount", method = RequestMethod.GET)
-    public String getEpisodesCount() {
-        return serialize(showFacade.getEpisodesCount());
+    public ResponseEntity<String> getEpisodesCount() {
+        return getDataResponseEntity(showFacade.getEpisodesCount());
     }
 
 }

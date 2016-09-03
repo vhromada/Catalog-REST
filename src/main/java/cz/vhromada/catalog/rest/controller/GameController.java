@@ -5,8 +5,11 @@ import cz.vhromada.catalog.facade.to.GameTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -17,7 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller("gameController")
 @RequestMapping("/games")
-public class GameController extends JsonController {
+@CrossOrigin
+public class GameController extends AbstractCatalogController {
 
     @Autowired
     @Qualifier("gameFacade")
@@ -27,8 +31,10 @@ public class GameController extends JsonController {
      * Creates new data.
      */
     @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public void newData() {
+    public ResponseEntity<Void> newData() {
         gameFacade.newData();
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -37,8 +43,8 @@ public class GameController extends JsonController {
      * @return list of games
      */
     @RequestMapping(value = { "", "/", "list" }, method = RequestMethod.GET)
-    public String getGames() {
-        return serialize(gameFacade.getGames());
+    public ResponseEntity<String> getGames() {
+        return getDataResponseEntity(gameFacade.getGames());
     }
 
     /**
@@ -49,8 +55,8 @@ public class GameController extends JsonController {
      * @throws IllegalArgumentException if ID is null
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public String getGame(@PathVariable("id") final Integer id) {
-        return serialize(gameFacade.getGame(id));
+    public ResponseEntity<String> getGame(@PathVariable("id") final Integer id) {
+        return getDataResponseEntity(gameFacade.getGame(id));
     }
 
     /**
@@ -68,8 +74,10 @@ public class GameController extends JsonController {
      *                                                               or note is null
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public void add(final String game) {
+    public ResponseEntity<Void> add(@RequestBody final String game) {
         gameFacade.add(deserialize(game, GameTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -88,8 +96,10 @@ public class GameController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if game doesn't exist in data storage
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public void update(final String game) {
+    public ResponseEntity<Void> update(@RequestBody final String game) {
         gameFacade.update(deserialize(game, GameTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -101,8 +111,10 @@ public class GameController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if game doesn't exist in data storage
      */
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    public void remove(final String game) {
+    public ResponseEntity<Void> remove(@RequestBody final String game) {
         gameFacade.remove(deserialize(game, GameTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -114,8 +126,10 @@ public class GameController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if game doesn't exist in data storage
      */
     @RequestMapping(value = "/duplicate", method = RequestMethod.POST)
-    public void duplicate(final String game) {
+    public ResponseEntity<Void> duplicate(@RequestBody final String game) {
         gameFacade.duplicate(deserialize(game, GameTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -128,8 +142,10 @@ public class GameController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if game doesn't exist in data storage
      */
     @RequestMapping(value = "/moveUp", method = RequestMethod.POST)
-    public void moveUp(final String game) {
+    public ResponseEntity<Void> moveUp(@RequestBody final String game) {
         gameFacade.moveUp(deserialize(game, GameTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -142,16 +158,20 @@ public class GameController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if game doesn't exist in data storage
      */
     @RequestMapping(value = "/moveDown", method = RequestMethod.POST)
-    public void moveDown(final String game) {
+    public ResponseEntity<Void> moveDown(@RequestBody final String game) {
         gameFacade.moveDown(deserialize(game, GameTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
      * Updates positions.
      */
     @RequestMapping(value = "/updatePositions", method = RequestMethod.GET)
-    public void updatePositions() {
+    public ResponseEntity<Void> updatePositions() {
         gameFacade.updatePositions();
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -160,8 +180,8 @@ public class GameController extends JsonController {
      * @return total count of media
      */
     @RequestMapping(value = "/totalMedia", method = RequestMethod.GET)
-    public String getTotalMediaCount() {
-        return serialize(gameFacade.getTotalMediaCount());
+    public ResponseEntity<String> getTotalMediaCount() {
+        return getDataResponseEntity(gameFacade.getTotalMediaCount());
     }
 
 }

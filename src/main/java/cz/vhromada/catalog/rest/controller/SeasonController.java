@@ -6,8 +6,11 @@ import cz.vhromada.catalog.facade.to.ShowTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -18,7 +21,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller("seasonController")
 @RequestMapping("/shows/{showId}/seasons")
-public class SeasonController extends JsonController {
+@CrossOrigin
+public class SeasonController extends AbstractCatalogController {
 
     @Autowired
     @Qualifier("seasonFacade")
@@ -33,8 +37,9 @@ public class SeasonController extends JsonController {
      * @throws IllegalArgumentException if ID is null
      */
     @RequestMapping(value = "/{seasonId}", method = RequestMethod.GET)
-    public String getSeason(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @PathVariable("seasonId") final Integer seasonId) {
-        return serialize(seasonFacade.getSeason(seasonId));
+    public ResponseEntity<String> getSeason(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+            @PathVariable("seasonId") final Integer seasonId) {
+        return getDataResponseEntity(seasonFacade.getSeason(seasonId));
     }
 
     /**
@@ -56,11 +61,13 @@ public class SeasonController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if show doesn't exist in data storage
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public void add(@PathVariable("showId") final Integer showId, final String season) {
+    public ResponseEntity<Void> add(@PathVariable("showId") final Integer showId, @RequestBody final String season) {
         final ShowTO show = new ShowTO();
         show.setId(showId);
 
         seasonFacade.add(show, deserialize(season, SeasonTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -82,8 +89,10 @@ public class SeasonController extends JsonController {
      *                                                                   or show doesn't exist in data storage
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public void update(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, final String season) {
+    public ResponseEntity<Void> update(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final String season) {
         seasonFacade.update(deserialize(season, SeasonTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -96,8 +105,10 @@ public class SeasonController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if season doesn't exist in data storage
      */
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    public void remove(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, final String season) {
+    public ResponseEntity<Void> remove(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final String season) {
         seasonFacade.remove(deserialize(season, SeasonTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -110,8 +121,10 @@ public class SeasonController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if season doesn't exist in data storage
      */
     @RequestMapping(value = "/duplicate", method = RequestMethod.POST)
-    public void duplicate(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, final String season) {
+    public ResponseEntity<Void> duplicate(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final String season) {
         seasonFacade.duplicate(deserialize(season, SeasonTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -125,8 +138,10 @@ public class SeasonController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if season doesn't exist in data storage
      */
     @RequestMapping(value = "/moveUp", method = RequestMethod.POST)
-    public void moveUp(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, final String season) {
+    public ResponseEntity<Void> moveUp(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final String season) {
         seasonFacade.moveUp(deserialize(season, SeasonTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -140,8 +155,10 @@ public class SeasonController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if season doesn't exist in data storage
      */
     @RequestMapping(value = "/moveDown", method = RequestMethod.POST)
-    public void moveDown(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, final String season) {
+    public ResponseEntity<Void> moveDown(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final String season) {
         seasonFacade.moveDown(deserialize(season, SeasonTO.class));
+
+        return getEmptyResponseEntity();
     }
 
     /**
@@ -154,11 +171,11 @@ public class SeasonController extends JsonController {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if show doesn't exist in data storage
      */
     @RequestMapping(value = { "", "/", "list" }, method = RequestMethod.GET)
-    public String findSeasonsByShow(@PathVariable("showId") final Integer showId) {
+    public ResponseEntity<String> findSeasonsByShow(@PathVariable("showId") final Integer showId) {
         final ShowTO show = new ShowTO();
         show.setId(showId);
 
-        return serialize(seasonFacade.findSeasonsByShow(show));
+        return getDataResponseEntity(seasonFacade.findSeasonsByShow(show));
     }
 
 }
