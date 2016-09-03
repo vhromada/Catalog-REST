@@ -182,7 +182,7 @@ public class GenreController extends AbstractCatalogController {
      *
      * @return response status
      */
-    @RequestMapping(value = "/updatePositions", method = RequestMethod.GET)
+    @RequestMapping(value = "/updatePositions", method = RequestMethod.POST)
     public ResponseEntity<Void> updatePositions() {
         genreFacade.updatePositions();
 

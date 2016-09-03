@@ -209,7 +209,7 @@ public class MovieController extends AbstractCatalogController {
      *
      * @return response status
      */
-    @RequestMapping(value = "/updatePositions", method = RequestMethod.GET)
+    @RequestMapping(value = "/updatePositions", method = RequestMethod.POST)
     public ResponseEntity<Void> updatePositions() {
         movieFacade.updatePositions();
 
