@@ -199,7 +199,7 @@ public class MusicController extends AbstractCatalogController {
      */
     @RequestMapping(value = "/totalLength", method = RequestMethod.GET)
     public ResponseEntity<String> getTotalLength() {
-        return getDataResponseEntity(musicFacade.getTotalLength());
+        return getDataResponseEntity(musicFacade.getTotalLength().getLength());
     }
 
     /**
