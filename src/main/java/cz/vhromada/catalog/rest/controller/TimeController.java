@@ -1,7 +1,6 @@
 package cz.vhromada.catalog.rest.controller;
 
 import cz.vhromada.catalog.commons.Time;
-import cz.vhromada.catalog.rest.entity.TimeRE;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -31,7 +30,7 @@ public class TimeController extends AbstractCatalogController {
     public ResponseEntity<String> getTime(@PathVariable final String time) {
         final Time value = new Time(deserialize(time, Integer.class));
 
-        return getDataResponseEntity(new TimeRE(value.getData(Time.TimeData.HOUR), value.getData(Time.TimeData.MINUTE), value.getData(Time.TimeData.SECOND)));
+        return getDataResponseEntity(value.toString());
     }
 
 }
