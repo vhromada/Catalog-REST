@@ -218,7 +218,7 @@ public class ShowController extends AbstractCatalogController {
      */
     @RequestMapping(value = "/totalLength", method = RequestMethod.GET)
     public ResponseEntity<String> getTotalLength() {
-        return getDataResponseEntity(showFacade.getTotalLength());
+        return getDataResponseEntity(showFacade.getTotalLength().getLength());
     }
 
     /**
