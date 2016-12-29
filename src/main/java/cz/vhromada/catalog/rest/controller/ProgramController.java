@@ -1,12 +1,12 @@
 package cz.vhromada.catalog.rest.controller;
 
+import cz.vhromada.catalog.entity.Program;
 import cz.vhromada.catalog.facade.ProgramFacade;
-import cz.vhromada.catalog.facade.to.ProgramTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,9 +23,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @CrossOrigin
 public class ProgramController extends AbstractCatalogController {
 
-    @Autowired
-    @Qualifier("programFacade")
+    /**
+     * Facade for programs
+     */
     private ProgramFacade programFacade;
+
+    /**
+     * Creates a new instance of ProgramController.
+     *
+     * @param programFacade facade for programs
+     * @throws IllegalArgumentException if facade for programs is null
+     */
+    @Autowired
+    public ProgramController(final ProgramFacade programFacade) {
+        Assert.notNull(programFacade, "Facade for programs mustn't be null.");
+
+        this.programFacade = programFacade;
+    }
 
     /**
      * Creates new data.
@@ -66,19 +80,19 @@ public class ProgramController extends AbstractCatalogController {
      *
      * @param program program
      * @return response status
-     * @throws IllegalArgumentException                              if program is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException if ID isn't null
-     *                                                               or name is null
-     *                                                               or name is empty string
-     *                                                               or URL to english Wikipedia page about program is null
-     *                                                               or URL to czech Wikipedia page about program is null
-     *                                                               or count of media isn't positive number
-     *                                                               or other data is null
-     *                                                               or note is null
+     * @throws IllegalArgumentException if program is null
+     *                                  or ID isn't null
+     *                                  or name is null
+     *                                  or name is empty string
+     *                                  or URL to english Wikipedia page about program is null
+     *                                  or URL to czech Wikipedia page about program is null
+     *                                  or count of media isn't positive number
+     *                                  or other data is null
+     *                                  or note is null
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ResponseEntity<Void> add(@RequestBody final String program) {
-        programFacade.add(deserialize(program, ProgramTO.class));
+        programFacade.add(deserialize(program, Program.class));
 
         return getEmptyResponseEntity();
     }
@@ -88,20 +102,20 @@ public class ProgramController extends AbstractCatalogController {
      *
      * @param program new value of program
      * @return response status
-     * @throws IllegalArgumentException                                  if program is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or name is null
-     *                                                                   or name is empty string
-     *                                                                   or URL to english Wikipedia page about program is null
-     *                                                                   or URL to czech Wikipedia page about program is null
-     *                                                                   or count of media isn't positive number
-     *                                                                   or other data is null
-     *                                                                   or note is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if program doesn't exist in data storage
+     * @throws IllegalArgumentException if program is null
+     *                                  or ID is null
+     *                                  or name is null
+     *                                  or name is empty string
+     *                                  or URL to english Wikipedia page about program is null
+     *                                  or URL to czech Wikipedia page about program is null
+     *                                  or count of media isn't positive number
+     *                                  or other data is null
+     *                                  or note is null
+     *                                  or program doesn't exist in data storage
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public ResponseEntity<Void> update(@RequestBody final String program) {
-        programFacade.update(deserialize(program, ProgramTO.class));
+        programFacade.update(deserialize(program, Program.class));
 
         return getEmptyResponseEntity();
     }
@@ -111,13 +125,13 @@ public class ProgramController extends AbstractCatalogController {
      *
      * @param program program
      * @return response status
-     * @throws IllegalArgumentException                                  if program is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if program doesn't exist in data storage
+     * @throws IllegalArgumentException if program is null
+     *                                  or ID is null
+     *                                  or program doesn't exist in data storage
      */
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     public ResponseEntity<Void> remove(@RequestBody final String program) {
-        programFacade.remove(deserialize(program, ProgramTO.class));
+        programFacade.remove(deserialize(program, Program.class));
 
         return getEmptyResponseEntity();
     }
@@ -127,13 +141,13 @@ public class ProgramController extends AbstractCatalogController {
      *
      * @param program program
      * @return response status
-     * @throws IllegalArgumentException                                  if program is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if program doesn't exist in data storage
+     * @throws IllegalArgumentException if program is null
+     *                                  or ID is null
+     *                                  or program doesn't exist in data storage
      */
     @RequestMapping(value = "/duplicate", method = RequestMethod.POST)
     public ResponseEntity<Void> duplicate(@RequestBody final String program) {
-        programFacade.duplicate(deserialize(program, ProgramTO.class));
+        programFacade.duplicate(deserialize(program, Program.class));
 
         return getEmptyResponseEntity();
     }
@@ -143,14 +157,14 @@ public class ProgramController extends AbstractCatalogController {
      *
      * @param program program
      * @return response status
-     * @throws IllegalArgumentException                                  if program is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or program can't be moved up
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if program doesn't exist in data storage
+     * @throws IllegalArgumentException if program is null
+     *                                  or ID is null
+     *                                  or program can't be moved up
+     *                                  or program doesn't exist in data storage
      */
     @RequestMapping(value = "/moveUp", method = RequestMethod.POST)
     public ResponseEntity<Void> moveUp(@RequestBody final String program) {
-        programFacade.moveUp(deserialize(program, ProgramTO.class));
+        programFacade.moveUp(deserialize(program, Program.class));
 
         return getEmptyResponseEntity();
     }
@@ -160,14 +174,14 @@ public class ProgramController extends AbstractCatalogController {
      *
      * @param program program
      * @return response status
-     * @throws IllegalArgumentException                                  if program is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or program can't be moved down
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if program doesn't exist in data storage
+     * @throws IllegalArgumentException if program is null
+     *                                  or ID is null
+     *                                  or program can't be moved down
+     *                                  or program doesn't exist in data storage
      */
     @RequestMapping(value = "/moveDown", method = RequestMethod.POST)
     public ResponseEntity<Void> moveDown(@RequestBody final String program) {
-        programFacade.moveDown(deserialize(program, ProgramTO.class));
+        programFacade.moveDown(deserialize(program, Program.class));
 
         return getEmptyResponseEntity();
     }

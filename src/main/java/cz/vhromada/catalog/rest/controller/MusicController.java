@@ -1,12 +1,12 @@
 package cz.vhromada.catalog.rest.controller;
 
+import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.facade.MusicFacade;
-import cz.vhromada.catalog.facade.to.MusicTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,9 +23,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @CrossOrigin
 public class MusicController extends AbstractCatalogController {
 
-    @Autowired
-    @Qualifier("musicFacade")
+    /**
+     * Facade for music
+     */
     private MusicFacade musicFacade;
+
+    /**
+     * Creates a new instance of MusicController.
+     *
+     * @param musicFacade facade for music
+     * @throws IllegalArgumentException if facade for music is null
+     */
+    @Autowired
+    public MusicController(final MusicFacade musicFacade) {
+        Assert.notNull(musicFacade, "Facade for music mustn't be null.");
+
+        this.musicFacade = musicFacade;
+    }
 
     /**
      * Creates new data.
@@ -66,18 +80,18 @@ public class MusicController extends AbstractCatalogController {
      *
      * @param music music
      * @return response status
-     * @throws IllegalArgumentException                              if music is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException if ID isn't null
-     *                                                               or name is null
-     *                                                               or name is empty string
-     *                                                               or URL to english Wikipedia page about music is null
-     *                                                               or URL to czech Wikipedia page about music is null
-     *                                                               or count of media isn't positive number
-     *                                                               or note is null
+     * @throws IllegalArgumentException if music is null
+     *                                  or ID isn't null
+     *                                  or name is null
+     *                                  or name is empty string
+     *                                  or URL to english Wikipedia page about music is null
+     *                                  or URL to czech Wikipedia page about music is null
+     *                                  or count of media isn't positive number
+     *                                  or note is null
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ResponseEntity<Void> add(@RequestBody final String music) {
-        musicFacade.add(deserialize(music, MusicTO.class));
+        musicFacade.add(deserialize(music, Music.class));
 
         return getEmptyResponseEntity();
     }
@@ -87,19 +101,19 @@ public class MusicController extends AbstractCatalogController {
      *
      * @param music new value of music
      * @return response status
-     * @throws IllegalArgumentException                                  if music is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or name is null
-     *                                                                   or name is empty string
-     *                                                                   or URL to english Wikipedia page about music is null
-     *                                                                   or URL to czech Wikipedia page about music is null
-     *                                                                   or count of media isn't positive number
-     *                                                                   or note is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
+     * @throws IllegalArgumentException if music is null
+     *                                  or ID is null
+     *                                  or name is null
+     *                                  or name is empty string
+     *                                  or URL to english Wikipedia page about music is null
+     *                                  or URL to czech Wikipedia page about music is null
+     *                                  or count of media isn't positive number
+     *                                  or note is null
+     *                                  or music doesn't exist in data storage
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public ResponseEntity<Void> update(@RequestBody final String music) {
-        musicFacade.update(deserialize(music, MusicTO.class));
+        musicFacade.update(deserialize(music, Music.class));
 
         return getEmptyResponseEntity();
     }
@@ -109,13 +123,13 @@ public class MusicController extends AbstractCatalogController {
      *
      * @param music music
      * @return response status
-     * @throws IllegalArgumentException                                  if music is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
+     * @throws IllegalArgumentException if music is null
+     *                                  or ID is null
+     *                                  or music doesn't exist in data storage
      */
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     public ResponseEntity<Void> remove(@RequestBody final String music) {
-        musicFacade.remove(deserialize(music, MusicTO.class));
+        musicFacade.remove(deserialize(music, Music.class));
 
         return getEmptyResponseEntity();
     }
@@ -125,13 +139,13 @@ public class MusicController extends AbstractCatalogController {
      *
      * @param music music
      * @return response status
-     * @throws IllegalArgumentException                                  if music is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
+     * @throws IllegalArgumentException if music is null
+     *                                  or ID is null
+     *                                  or music doesn't exist in data storage
      */
     @RequestMapping(value = "/duplicate", method = RequestMethod.POST)
     public ResponseEntity<Void> duplicate(@RequestBody final String music) {
-        musicFacade.duplicate(deserialize(music, MusicTO.class));
+        musicFacade.duplicate(deserialize(music, Music.class));
 
         return getEmptyResponseEntity();
     }
@@ -141,14 +155,14 @@ public class MusicController extends AbstractCatalogController {
      *
      * @param music music
      * @return response status
-     * @throws IllegalArgumentException                                  if music is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or music can't be moved up
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
+     * @throws IllegalArgumentException if music is null
+     *                                  or ID is null
+     *                                  or music can't be moved up
+     *                                  or music doesn't exist in data storage
      */
     @RequestMapping(value = "/moveUp", method = RequestMethod.POST)
     public ResponseEntity<Void> moveUp(@RequestBody final String music) {
-        musicFacade.moveUp(deserialize(music, MusicTO.class));
+        musicFacade.moveUp(deserialize(music, Music.class));
 
         return getEmptyResponseEntity();
     }
@@ -158,14 +172,14 @@ public class MusicController extends AbstractCatalogController {
      *
      * @param music music
      * @return response status
-     * @throws IllegalArgumentException                                  if music is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or music can't be moved down
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
+     * @throws IllegalArgumentException if music is null
+     *                                  or ID is null
+     *                                  or music can't be moved down
+     *                                  or music doesn't exist in data storage
      */
     @RequestMapping(value = "/moveDown", method = RequestMethod.POST)
     public ResponseEntity<Void> moveDown(@RequestBody final String music) {
-        musicFacade.moveDown(deserialize(music, MusicTO.class));
+        musicFacade.moveDown(deserialize(music, Music.class));
 
         return getEmptyResponseEntity();
     }

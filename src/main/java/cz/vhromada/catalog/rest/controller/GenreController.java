@@ -1,11 +1,11 @@
 package cz.vhromada.catalog.rest.controller;
 
+import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.facade.GenreFacade;
-import cz.vhromada.catalog.facade.to.GenreTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,9 +23,23 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 public class GenreController extends AbstractCatalogController {
 
-    @Autowired
-    @Qualifier("genreFacade")
+    /**
+     * Facade for genres
+     */
     private GenreFacade genreFacade;
+
+    /**
+     * Creates a new instance of GenreController.
+     *
+     * @param genreFacade facade for genres
+     * @throws IllegalArgumentException if facade for genres is null
+     */
+    @Autowired
+    public GenreController(final GenreFacade genreFacade) {
+        Assert.notNull(genreFacade, "Facade for genres mustn't be null.");
+
+        this.genreFacade = genreFacade;
+    }
 
     /**
      * Creates new data.
@@ -66,29 +80,14 @@ public class GenreController extends AbstractCatalogController {
      *
      * @param genre genre
      * @return response status
-     * @throws IllegalArgumentException                              if genre is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException if ID isn't null
-     *                                                               or name is null
-     *                                                               or name is empty string
+     * @throws IllegalArgumentException if genre is null
+     *                                  or ID isn't null
+     *                                  or name is null
+     *                                  or name is empty string
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ResponseEntity<Void> add(@RequestBody final String genre) {
-        genreFacade.add(deserialize(genre, GenreTO.class));
-
-        return getEmptyResponseEntity();
-    }
-
-    /**
-     * Adds list of genre names.
-     *
-     * @param genre genre
-     * @return response status
-     * @throws IllegalArgumentException                              if list of genre names is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException if list of genre names contains null value
-     */
-    @RequestMapping(value = "/addList", method = RequestMethod.POST)
-    public ResponseEntity<Void> addList(@RequestBody final String genre) {
-        genreFacade.add(this.deserializeList(genre));
+        genreFacade.add(deserialize(genre, Genre.class));
 
         return getEmptyResponseEntity();
     }
@@ -98,15 +97,15 @@ public class GenreController extends AbstractCatalogController {
      *
      * @param genre new value of genre
      * @return response status
-     * @throws IllegalArgumentException                                  if genre is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or name is null
-     *                                                                   or name is empty string
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
+     * @throws IllegalArgumentException if genre is null
+     *                                  or ID is null
+     *                                  or name is null
+     *                                  or name is empty string
+     *                                  or genre doesn't exist in data storage
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public ResponseEntity<Void> update(@RequestBody final String genre) {
-        genreFacade.update(deserialize(genre, GenreTO.class));
+        genreFacade.update(deserialize(genre, Genre.class));
 
         return getEmptyResponseEntity();
     }
@@ -116,13 +115,13 @@ public class GenreController extends AbstractCatalogController {
      *
      * @param genre genre
      * @return response status
-     * @throws IllegalArgumentException                                  if genre is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
+     * @throws IllegalArgumentException if genre is null
+     *                                  or ID is null
+     *                                  or genre doesn't exist in data storage
      */
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     public ResponseEntity<Void> remove(@RequestBody final String genre) {
-        genreFacade.remove(deserialize(genre, GenreTO.class));
+        genreFacade.remove(deserialize(genre, Genre.class));
 
         return getEmptyResponseEntity();
     }
@@ -132,13 +131,13 @@ public class GenreController extends AbstractCatalogController {
      *
      * @param genre genre
      * @return response status
-     * @throws IllegalArgumentException                                  if genre is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
+     * @throws IllegalArgumentException if genre is null
+     *                                  or ID is null
+     *                                  or genre doesn't exist in data storage
      */
     @RequestMapping(value = "/duplicate", method = RequestMethod.POST)
     public ResponseEntity<Void> duplicate(@RequestBody final String genre) {
-        genreFacade.duplicate(deserialize(genre, GenreTO.class));
+        genreFacade.duplicate(deserialize(genre, Genre.class));
 
         return getEmptyResponseEntity();
     }
@@ -148,14 +147,14 @@ public class GenreController extends AbstractCatalogController {
      *
      * @param genre genre
      * @return response status
-     * @throws IllegalArgumentException                                  if genre is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or genre can't be moved up
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
+     * @throws IllegalArgumentException if genre is null
+     *                                  or ID is null
+     *                                  or genre can't be moved up
+     *                                  or genre doesn't exist in data storage
      */
     @RequestMapping(value = "/moveUp", method = RequestMethod.POST)
     public ResponseEntity<Void> moveUp(@RequestBody final String genre) {
-        genreFacade.moveUp(deserialize(genre, GenreTO.class));
+        genreFacade.moveUp(deserialize(genre, Genre.class));
 
         return getEmptyResponseEntity();
     }
@@ -165,14 +164,14 @@ public class GenreController extends AbstractCatalogController {
      *
      * @param genre genre
      * @return response status
-     * @throws IllegalArgumentException                                  if genre is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or genre can't be moved down
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
+     * @throws IllegalArgumentException if genre is null
+     *                                  or ID is null
+     *                                  or genre can't be moved down
+     *                                  or genre doesn't exist in data storage
      */
     @RequestMapping(value = "/moveDown", method = RequestMethod.POST)
     public ResponseEntity<Void> moveDown(@RequestBody final String genre) {
-        genreFacade.moveDown(deserialize(genre, GenreTO.class));
+        genreFacade.moveDown(deserialize(genre, Genre.class));
 
         return getEmptyResponseEntity();
     }

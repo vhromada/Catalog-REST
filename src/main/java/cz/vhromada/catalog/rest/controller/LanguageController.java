@@ -2,7 +2,7 @@ package cz.vhromada.catalog.rest.controller;
 
 import java.util.Arrays;
 
-import cz.vhromada.catalog.commons.Language;
+import cz.vhromada.catalog.common.Language;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;

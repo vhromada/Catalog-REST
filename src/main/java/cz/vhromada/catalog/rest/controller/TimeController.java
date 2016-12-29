@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.rest.controller;
 
-import cz.vhromada.catalog.commons.Time;
+import cz.vhromada.catalog.common.Time;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

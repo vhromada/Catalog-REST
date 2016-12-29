@@ -1,12 +1,12 @@
 package cz.vhromada.catalog.rest.controller;
 
+import cz.vhromada.catalog.entity.Game;
 import cz.vhromada.catalog.facade.GameFacade;
-import cz.vhromada.catalog.facade.to.GameTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,9 +23,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @CrossOrigin
 public class GameController extends AbstractCatalogController {
 
-    @Autowired
-    @Qualifier("gameFacade")
+    /**
+     * Facade for games
+     */
     private GameFacade gameFacade;
+
+    /**
+     * Creates a new instance of GameController.
+     *
+     * @param gameFacade facade for games
+     * @throws IllegalArgumentException if facade for games is null
+     */
+    @Autowired
+    public GameController(final GameFacade gameFacade) {
+        Assert.notNull(gameFacade, "Facade for games mustn't be null.");
+
+        this.gameFacade = gameFacade;
+    }
 
     /**
      * Creates new data.
@@ -66,19 +80,19 @@ public class GameController extends AbstractCatalogController {
      *
      * @param game game
      * @return response status
-     * @throws IllegalArgumentException                              if game is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException if ID isn't null
-     *                                                               or name is null
-     *                                                               or name is empty string
-     *                                                               or URL to english Wikipedia page about game is null
-     *                                                               or URL to czech Wikipedia page about game is null
-     *                                                               or count of media isn't positive number
-     *                                                               or other data is null
-     *                                                               or note is null
+     * @throws IllegalArgumentException if game is null
+     *                                  or ID isn't null
+     *                                  or name is null
+     *                                  or name is empty string
+     *                                  or URL to english Wikipedia page about game is null
+     *                                  or URL to czech Wikipedia page about game is null
+     *                                  or count of media isn't positive number
+     *                                  or other data is null
+     *                                  or note is null
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ResponseEntity<Void> add(@RequestBody final String game) {
-        gameFacade.add(deserialize(game, GameTO.class));
+        gameFacade.add(deserialize(game, Game.class));
 
         return getEmptyResponseEntity();
     }
@@ -88,20 +102,20 @@ public class GameController extends AbstractCatalogController {
      *
      * @param game new value of game
      * @return response status
-     * @throws IllegalArgumentException                                  if game is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or name is null
-     *                                                                   or name is empty string
-     *                                                                   or URL to english Wikipedia page about game is null
-     *                                                                   or URL to czech Wikipedia page about game is null
-     *                                                                   or count of media isn't positive number
-     *                                                                   or other data is null
-     *                                                                   or note is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if game doesn't exist in data storage
+     * @throws IllegalArgumentException if game is null
+     *                                  or ID is null
+     *                                  or name is null
+     *                                  or name is empty string
+     *                                  or URL to english Wikipedia page about game is null
+     *                                  or URL to czech Wikipedia page about game is null
+     *                                  or count of media isn't positive number
+     *                                  or other data is null
+     *                                  or note is null
+     *                                  or game doesn't exist in data storage
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public ResponseEntity<Void> update(@RequestBody final String game) {
-        gameFacade.update(deserialize(game, GameTO.class));
+        gameFacade.update(deserialize(game, Game.class));
 
         return getEmptyResponseEntity();
     }
@@ -111,13 +125,13 @@ public class GameController extends AbstractCatalogController {
      *
      * @param game game
      * @return response status
-     * @throws IllegalArgumentException                                  if game is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if game doesn't exist in data storage
+     * @throws IllegalArgumentException if game is null
+     *                                  or ID is null
+     *                                  or game doesn't exist in data storage
      */
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     public ResponseEntity<Void> remove(@RequestBody final String game) {
-        gameFacade.remove(deserialize(game, GameTO.class));
+        gameFacade.remove(deserialize(game, Game.class));
 
         return getEmptyResponseEntity();
     }
@@ -127,13 +141,13 @@ public class GameController extends AbstractCatalogController {
      *
      * @param game game
      * @return response status
-     * @throws IllegalArgumentException                                  if game is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if game doesn't exist in data storage
+     * @throws IllegalArgumentException if game is null
+     *                                  or ID is null
+     *                                  or game doesn't exist in data storage
      */
     @RequestMapping(value = "/duplicate", method = RequestMethod.POST)
     public ResponseEntity<Void> duplicate(@RequestBody final String game) {
-        gameFacade.duplicate(deserialize(game, GameTO.class));
+        gameFacade.duplicate(deserialize(game, Game.class));
 
         return getEmptyResponseEntity();
     }
@@ -143,14 +157,14 @@ public class GameController extends AbstractCatalogController {
      *
      * @param game game
      * @return response status
-     * @throws IllegalArgumentException                                  if game is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or game can't be moved up
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if game doesn't exist in data storage
+     * @throws IllegalArgumentException if game is null
+     *                                  or ID is null
+     *                                  or game can't be moved up
+     *                                  or game doesn't exist in data storage
      */
     @RequestMapping(value = "/moveUp", method = RequestMethod.POST)
     public ResponseEntity<Void> moveUp(@RequestBody final String game) {
-        gameFacade.moveUp(deserialize(game, GameTO.class));
+        gameFacade.moveUp(deserialize(game, Game.class));
 
         return getEmptyResponseEntity();
     }
@@ -160,14 +174,14 @@ public class GameController extends AbstractCatalogController {
      *
      * @param game game
      * @return response status
-     * @throws IllegalArgumentException                                  if game is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or game can't be moved down
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if game doesn't exist in data storage
+     * @throws IllegalArgumentException if game is null
+     *                                  or ID is null
+     *                                  or game can't be moved down
+     *                                  or game doesn't exist in data storage
      */
     @RequestMapping(value = "/moveDown", method = RequestMethod.POST)
     public ResponseEntity<Void> moveDown(@RequestBody final String game) {
-        gameFacade.moveDown(deserialize(game, GameTO.class));
+        gameFacade.moveDown(deserialize(game, Game.class));
 
         return getEmptyResponseEntity();
     }
