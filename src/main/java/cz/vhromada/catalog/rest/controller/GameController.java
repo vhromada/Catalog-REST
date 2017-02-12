@@ -1,17 +1,21 @@
 package cz.vhromada.catalog.rest.controller;
 
+import java.util.List;
+
 import cz.vhromada.catalog.entity.Game;
 import cz.vhromada.catalog.facade.GameFacade;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * A class represents controller for games.
@@ -21,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller("gameController")
 @RequestMapping("/games")
 @CrossOrigin
-public class GameController extends AbstractCatalogController {
+public class GameController {
 
     /**
      * Facade for games
@@ -43,14 +47,10 @@ public class GameController extends AbstractCatalogController {
 
     /**
      * Creates new data.
-     *
-     * @return response status
      */
-    @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public ResponseEntity<Void> newData() {
+    @PostMapping("/new")
+    public void newData() {
         gameFacade.newData();
-
-        return getEmptyResponseEntity();
     }
 
     /**
@@ -58,9 +58,9 @@ public class GameController extends AbstractCatalogController {
      *
      * @return list of games
      */
-    @RequestMapping(value = { "", "/", "list" }, method = RequestMethod.GET)
-    public ResponseEntity<String> getGames() {
-        return getDataResponseEntity(gameFacade.getGames());
+    @GetMapping({ "", "/", "/list" })
+    public List<Game> getGames() {
+        return gameFacade.getGames();
     }
 
     /**
@@ -70,16 +70,15 @@ public class GameController extends AbstractCatalogController {
      * @return game with ID or null if there isn't such game
      * @throws IllegalArgumentException if ID is null
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<String> getGame(@PathVariable("id") final Integer id) {
-        return getDataResponseEntity(gameFacade.getGame(id));
+    @GetMapping("/{id}")
+    public Game getGame(@PathVariable("id") final Integer id) {
+        return gameFacade.getGame(id);
     }
 
     /**
      * Adds game. Sets new ID and position.
      *
      * @param game game
-     * @return response status
      * @throws IllegalArgumentException if game is null
      *                                  or ID isn't null
      *                                  or name is null
@@ -90,18 +89,15 @@ public class GameController extends AbstractCatalogController {
      *                                  or other data is null
      *                                  or note is null
      */
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseEntity<Void> add(@RequestBody final String game) {
-        gameFacade.add(deserialize(game, Game.class));
-
-        return getEmptyResponseEntity();
+    @PutMapping("/add")
+    public void add(@RequestBody final Game game) {
+        gameFacade.add(game);
     }
 
     /**
      * Updates game.
      *
      * @param game new value of game
-     * @return response status
      * @throws IllegalArgumentException if game is null
      *                                  or ID is null
      *                                  or name is null
@@ -113,89 +109,71 @@ public class GameController extends AbstractCatalogController {
      *                                  or note is null
      *                                  or game doesn't exist in data storage
      */
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public ResponseEntity<Void> update(@RequestBody final String game) {
-        gameFacade.update(deserialize(game, Game.class));
-
-        return getEmptyResponseEntity();
+    @PostMapping("/update")
+    public void update(@RequestBody final Game game) {
+        gameFacade.update(game);
     }
 
     /**
      * Removes game.
      *
      * @param game game
-     * @return response status
      * @throws IllegalArgumentException if game is null
      *                                  or ID is null
      *                                  or game doesn't exist in data storage
      */
-    @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    public ResponseEntity<Void> remove(@RequestBody final String game) {
-        gameFacade.remove(deserialize(game, Game.class));
-
-        return getEmptyResponseEntity();
+    @DeleteMapping("/remove")
+    public void remove(@RequestBody final Game game) {
+        gameFacade.remove(game);
     }
 
     /**
      * Duplicates game.
      *
      * @param game game
-     * @return response status
      * @throws IllegalArgumentException if game is null
      *                                  or ID is null
      *                                  or game doesn't exist in data storage
      */
-    @RequestMapping(value = "/duplicate", method = RequestMethod.POST)
-    public ResponseEntity<Void> duplicate(@RequestBody final String game) {
-        gameFacade.duplicate(deserialize(game, Game.class));
-
-        return getEmptyResponseEntity();
+    @PostMapping("/duplicate")
+    public void duplicate(@RequestBody final Game game) {
+        gameFacade.duplicate(game);
     }
 
     /**
      * Moves game in list one position up.
      *
      * @param game game
-     * @return response status
      * @throws IllegalArgumentException if game is null
      *                                  or ID is null
      *                                  or game can't be moved up
      *                                  or game doesn't exist in data storage
      */
-    @RequestMapping(value = "/moveUp", method = RequestMethod.POST)
-    public ResponseEntity<Void> moveUp(@RequestBody final String game) {
-        gameFacade.moveUp(deserialize(game, Game.class));
-
-        return getEmptyResponseEntity();
+    @PostMapping("/moveUp")
+    public void moveUp(@RequestBody final Game game) {
+        gameFacade.moveUp(game);
     }
 
     /**
      * Moves game in list one position down.
      *
      * @param game game
-     * @return response status
      * @throws IllegalArgumentException if game is null
      *                                  or ID is null
      *                                  or game can't be moved down
      *                                  or game doesn't exist in data storage
      */
-    @RequestMapping(value = "/moveDown", method = RequestMethod.POST)
-    public ResponseEntity<Void> moveDown(@RequestBody final String game) {
-        gameFacade.moveDown(deserialize(game, Game.class));
-
-        return getEmptyResponseEntity();
+    @PostMapping("/moveDown")
+    public void moveDown(@RequestBody final Game game) {
+        gameFacade.moveDown(game);
     }
 
     /**
      * Updates positions.
-     *
-     * @return response status
      */
-    @RequestMapping(value = "/updatePositions", method = RequestMethod.POST)
-    public ResponseEntity<Void> updatePositions() {
+    @PostMapping("/updatePositions")
+    public void updatePositions() {
         gameFacade.updatePositions();
-
-        return getEmptyResponseEntity();
     }
 
     /**
@@ -203,9 +181,9 @@ public class GameController extends AbstractCatalogController {
      *
      * @return total count of media
      */
-    @RequestMapping(value = "/totalMedia", method = RequestMethod.GET)
-    public ResponseEntity<String> getTotalMediaCount() {
-        return getDataResponseEntity(gameFacade.getTotalMediaCount());
+    @GetMapping("/totalMedia")
+    public Integer getTotalMediaCount() {
+        return gameFacade.getTotalMediaCount();
     }
 
 }

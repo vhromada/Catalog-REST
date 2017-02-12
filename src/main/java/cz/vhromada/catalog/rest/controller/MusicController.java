@@ -1,17 +1,21 @@
 package cz.vhromada.catalog.rest.controller;
 
+import java.util.List;
+
 import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.facade.MusicFacade;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * A class represents controller for music.
@@ -21,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller("musicController")
 @RequestMapping("/music")
 @CrossOrigin
-public class MusicController extends AbstractCatalogController {
+public class MusicController {
 
     /**
      * Facade for music
@@ -43,14 +47,10 @@ public class MusicController extends AbstractCatalogController {
 
     /**
      * Creates new data.
-     *
-     * @return response status
      */
-    @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public ResponseEntity<Void> newData() {
+    @PostMapping("/new")
+    public void newData() {
         musicFacade.newData();
-
-        return getEmptyResponseEntity();
     }
 
     /**
@@ -58,9 +58,9 @@ public class MusicController extends AbstractCatalogController {
      *
      * @return list of music
      */
-    @RequestMapping(value = { "", "/", "list" }, method = RequestMethod.GET)
-    public ResponseEntity<String> getMusic() {
-        return getDataResponseEntity(musicFacade.getMusic());
+    @GetMapping({ "", "/", "list" })
+    public List<Music> getMusic() {
+        return musicFacade.getMusic();
     }
 
     /**
@@ -70,16 +70,15 @@ public class MusicController extends AbstractCatalogController {
      * @return music with ID or null if there isn't such music
      * @throws IllegalArgumentException if ID is null
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<String> getMusic(@PathVariable("id") final Integer id) {
-        return getDataResponseEntity(musicFacade.getMusic(id));
+    @GetMapping("/{id}")
+    public Music getMusic(@PathVariable("id") final Integer id) {
+        return musicFacade.getMusic(id);
     }
 
     /**
      * Adds music. Sets new ID and position.
      *
      * @param music music
-     * @return response status
      * @throws IllegalArgumentException if music is null
      *                                  or ID isn't null
      *                                  or name is null
@@ -89,18 +88,15 @@ public class MusicController extends AbstractCatalogController {
      *                                  or count of media isn't positive number
      *                                  or note is null
      */
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseEntity<Void> add(@RequestBody final String music) {
-        musicFacade.add(deserialize(music, Music.class));
-
-        return getEmptyResponseEntity();
+    @PutMapping
+    public void add(@RequestBody final Music music) {
+        musicFacade.add(music);
     }
 
     /**
      * Updates music.
      *
      * @param music new value of music
-     * @return response status
      * @throws IllegalArgumentException if music is null
      *                                  or ID is null
      *                                  or name is null
@@ -111,89 +107,71 @@ public class MusicController extends AbstractCatalogController {
      *                                  or note is null
      *                                  or music doesn't exist in data storage
      */
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public ResponseEntity<Void> update(@RequestBody final String music) {
-        musicFacade.update(deserialize(music, Music.class));
-
-        return getEmptyResponseEntity();
+    @PostMapping("/update")
+    public void update(@RequestBody final Music music) {
+        musicFacade.update(music);
     }
 
     /**
      * Removes music.
      *
      * @param music music
-     * @return response status
      * @throws IllegalArgumentException if music is null
      *                                  or ID is null
      *                                  or music doesn't exist in data storage
      */
-    @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    public ResponseEntity<Void> remove(@RequestBody final String music) {
-        musicFacade.remove(deserialize(music, Music.class));
-
-        return getEmptyResponseEntity();
+    @DeleteMapping("/remove")
+    public void remove(@RequestBody final Music music) {
+        musicFacade.remove(music);
     }
 
     /**
      * Duplicates music.
      *
      * @param music music
-     * @return response status
      * @throws IllegalArgumentException if music is null
      *                                  or ID is null
      *                                  or music doesn't exist in data storage
      */
-    @RequestMapping(value = "/duplicate", method = RequestMethod.POST)
-    public ResponseEntity<Void> duplicate(@RequestBody final String music) {
-        musicFacade.duplicate(deserialize(music, Music.class));
-
-        return getEmptyResponseEntity();
+    @PostMapping("/duplicate")
+    public void duplicate(@RequestBody final Music music) {
+        musicFacade.duplicate(music);
     }
 
     /**
      * Moves music in list one position up.
      *
      * @param music music
-     * @return response status
      * @throws IllegalArgumentException if music is null
      *                                  or ID is null
      *                                  or music can't be moved up
      *                                  or music doesn't exist in data storage
      */
-    @RequestMapping(value = "/moveUp", method = RequestMethod.POST)
-    public ResponseEntity<Void> moveUp(@RequestBody final String music) {
-        musicFacade.moveUp(deserialize(music, Music.class));
-
-        return getEmptyResponseEntity();
+    @PostMapping("/moveUp")
+    public void moveUp(@RequestBody final Music music) {
+        musicFacade.moveUp(music);
     }
 
     /**
      * Moves music in list one position down.
      *
      * @param music music
-     * @return response status
      * @throws IllegalArgumentException if music is null
      *                                  or ID is null
      *                                  or music can't be moved down
      *                                  or music doesn't exist in data storage
      */
-    @RequestMapping(value = "/moveDown", method = RequestMethod.POST)
-    public ResponseEntity<Void> moveDown(@RequestBody final String music) {
-        musicFacade.moveDown(deserialize(music, Music.class));
-
-        return getEmptyResponseEntity();
+    @PostMapping("/moveDown")
+    public void moveDown(@RequestBody final Music music) {
+        musicFacade.moveDown(music);
     }
 
     /**
      * Updates positions.
-     *
-     * @return response status
      */
-    @RequestMapping(value = "/updatePositions", method = RequestMethod.POST)
-    public ResponseEntity<Void> updatePositions() {
+    @PostMapping("/updatePositions")
+    public void updatePositions() {
         musicFacade.updatePositions();
-
-        return getEmptyResponseEntity();
     }
 
     /**
@@ -201,9 +179,9 @@ public class MusicController extends AbstractCatalogController {
      *
      * @return total count of media
      */
-    @RequestMapping(value = "/totalMedia", method = RequestMethod.GET)
-    public ResponseEntity<String> getTotalMediaCount() {
-        return getDataResponseEntity(musicFacade.getTotalMediaCount());
+    @GetMapping("/totalMedia")
+    public Integer getTotalMediaCount() {
+        return musicFacade.getTotalMediaCount();
     }
 
     /**
@@ -211,9 +189,9 @@ public class MusicController extends AbstractCatalogController {
      *
      * @return total length of all music
      */
-    @RequestMapping(value = "/totalLength", method = RequestMethod.GET)
-    public ResponseEntity<String> getTotalLength() {
-        return getDataResponseEntity(musicFacade.getTotalLength().getLength());
+    @GetMapping("/totalLength")
+    public Integer getTotalLength() {
+        return musicFacade.getTotalLength().getLength();
     }
 
     /**
@@ -221,9 +199,9 @@ public class MusicController extends AbstractCatalogController {
      *
      * @return count of songs from all music
      */
-    @RequestMapping(value = "/songsCount", method = RequestMethod.GET)
-    public ResponseEntity<String> getSongsCount() {
-        return getDataResponseEntity(musicFacade.getSongsCount());
+    @GetMapping("/songsCount")
+    public Integer getSongsCount() {
+        return musicFacade.getSongsCount();
     }
 
 }

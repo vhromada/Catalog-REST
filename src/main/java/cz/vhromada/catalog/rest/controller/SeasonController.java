@@ -1,18 +1,22 @@
 package cz.vhromada.catalog.rest.controller;
 
+import java.util.List;
+
 import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.facade.SeasonFacade;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * A class represents controller for seasons.
@@ -22,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller("seasonController")
 @RequestMapping("/shows/{showId}/seasons")
 @CrossOrigin
-public class SeasonController extends AbstractCatalogController {
+public class SeasonController {
 
     /**
      * Facade for seasons
@@ -50,10 +54,9 @@ public class SeasonController extends AbstractCatalogController {
      * @return season with ID or null if there isn't such season
      * @throws IllegalArgumentException if ID is null
      */
-    @RequestMapping(value = "/{seasonId}", method = RequestMethod.GET)
-    public ResponseEntity<String> getSeason(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
-            @PathVariable("seasonId") final Integer seasonId) {
-        return getDataResponseEntity(seasonFacade.getSeason(seasonId));
+    @GetMapping("/{seasonId}")
+    public Season getSeason(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @PathVariable("seasonId") final Integer seasonId) {
+        return seasonFacade.getSeason(seasonId);
     }
 
     /**
@@ -61,7 +64,6 @@ public class SeasonController extends AbstractCatalogController {
      *
      * @param showId show ID
      * @param season season
-     * @return response status
      * @throws IllegalArgumentException if season is null
      *                                  or show ID is null
      *                                  or season ID isn't null
@@ -75,14 +77,12 @@ public class SeasonController extends AbstractCatalogController {
      *                                  or note is null
      *                                  or show doesn't exist in data storage
      */
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseEntity<Void> add(@PathVariable("showId") final Integer showId, @RequestBody final String season) {
+    @PutMapping("/add")
+    public void add(@PathVariable("showId") final Integer showId, @RequestBody final Season season) {
         final Show show = new Show();
         show.setId(showId);
 
-        seasonFacade.add(show, deserialize(season, Season.class));
-
-        return getEmptyResponseEntity();
+        seasonFacade.add(show, season);
     }
 
     /**
@@ -90,7 +90,6 @@ public class SeasonController extends AbstractCatalogController {
      *
      * @param showId show ID
      * @param season new value of season
-     * @return response status
      * @throws IllegalArgumentException if season is null
      *                                  or season ID is null
      *                                  or number of season isn't positive number
@@ -104,11 +103,9 @@ public class SeasonController extends AbstractCatalogController {
      *                                  or season doesn't exist in data storage
      *                                  or show doesn't exist in data storage
      */
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public ResponseEntity<Void> update(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final String season) {
-        seasonFacade.update(deserialize(season, Season.class));
-
-        return getEmptyResponseEntity();
+    @PostMapping("/update")
+    public void update(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
+        seasonFacade.update(season);
     }
 
     /**
@@ -116,16 +113,13 @@ public class SeasonController extends AbstractCatalogController {
      *
      * @param showId show ID
      * @param season season
-     * @return response status
      * @throws IllegalArgumentException if season is null
      *                                  or ID is null
      *                                  or season doesn't exist in data storage
      */
-    @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    public ResponseEntity<Void> remove(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final String season) {
-        seasonFacade.remove(deserialize(season, Season.class));
-
-        return getEmptyResponseEntity();
+    @DeleteMapping("/remove")
+    public void remove(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
+        seasonFacade.remove(season);
     }
 
     /**
@@ -133,16 +127,13 @@ public class SeasonController extends AbstractCatalogController {
      *
      * @param showId show ID
      * @param season season
-     * @return response status
      * @throws IllegalArgumentException if season is null
      *                                  or ID is null
      *                                  or season doesn't exist in data storage
      */
-    @RequestMapping(value = "/duplicate", method = RequestMethod.POST)
-    public ResponseEntity<Void> duplicate(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final String season) {
-        seasonFacade.duplicate(deserialize(season, Season.class));
-
-        return getEmptyResponseEntity();
+    @RequestMapping("/duplicate")
+    public void duplicate(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
+        seasonFacade.duplicate(season);
     }
 
     /**
@@ -150,17 +141,14 @@ public class SeasonController extends AbstractCatalogController {
      *
      * @param showId show ID
      * @param season season
-     * @return response status
      * @throws IllegalArgumentException if season is null
      *                                  or ID is null
      *                                  or season can't be moved up
      *                                  or season doesn't exist in data storage
      */
-    @RequestMapping(value = "/moveUp", method = RequestMethod.POST)
-    public ResponseEntity<Void> moveUp(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final String season) {
-        seasonFacade.moveUp(deserialize(season, Season.class));
-
-        return getEmptyResponseEntity();
+    @RequestMapping("/moveUp")
+    public void moveUp(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
+        seasonFacade.moveUp(season);
     }
 
     /**
@@ -168,17 +156,14 @@ public class SeasonController extends AbstractCatalogController {
      *
      * @param showId show ID
      * @param season season
-     * @return response status
      * @throws IllegalArgumentException if season is null
      *                                  or ID is null
      *                                  or season can't be moved down
      *                                  or season doesn't exist in data storage
      */
-    @RequestMapping(value = "/moveDown", method = RequestMethod.POST)
-    public ResponseEntity<Void> moveDown(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final String season) {
-        seasonFacade.moveDown(deserialize(season, Season.class));
-
-        return getEmptyResponseEntity();
+    @RequestMapping("/moveDown")
+    public void moveDown(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
+        seasonFacade.moveDown(season);
     }
 
     /**
@@ -190,12 +175,12 @@ public class SeasonController extends AbstractCatalogController {
      *                                  or ID is null
      *                                  or show doesn't exist in data storage
      */
-    @RequestMapping(value = { "", "/", "list" }, method = RequestMethod.GET)
-    public ResponseEntity<String> findSeasonsByShow(@PathVariable("showId") final Integer showId) {
+    @GetMapping({ "", "/", "/list" })
+    public List<Season> findSeasonsByShow(@PathVariable("showId") final Integer showId) {
         final Show show = new Show();
         show.setId(showId);
 
-        return getDataResponseEntity(seasonFacade.findSeasonsByShow(show));
+        return seasonFacade.findSeasonsByShow(show);
     }
 
 }

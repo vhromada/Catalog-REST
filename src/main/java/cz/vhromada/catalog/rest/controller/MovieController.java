@@ -1,17 +1,21 @@
 package cz.vhromada.catalog.rest.controller;
 
+import java.util.List;
+
 import cz.vhromada.catalog.entity.Movie;
 import cz.vhromada.catalog.facade.MovieFacade;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * A class represents controller for movies.
@@ -21,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller("movieController")
 @RequestMapping("/movies")
 @CrossOrigin
-public class MovieController extends AbstractCatalogController {
+public class MovieController {
 
     /**
      * Facade for movies
@@ -43,14 +47,10 @@ public class MovieController extends AbstractCatalogController {
 
     /**
      * Creates new data.
-     *
-     * @return response status
      */
-    @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public ResponseEntity<Void> newData() {
+    @PostMapping("/new")
+    public void newData() {
         movieFacade.newData();
-
-        return getEmptyResponseEntity();
     }
 
     /**
@@ -58,9 +58,9 @@ public class MovieController extends AbstractCatalogController {
      *
      * @return list of movies
      */
-    @RequestMapping(value = { "", "/", "list" }, method = RequestMethod.GET)
-    public ResponseEntity<String> getMovies() {
-        return getDataResponseEntity(movieFacade.getMovies());
+    @GetMapping({ "", "/", "list" })
+    public List<Movie> getMovies() {
+        return movieFacade.getMovies();
     }
 
     /**
@@ -70,16 +70,15 @@ public class MovieController extends AbstractCatalogController {
      * @return movie with ID or null if there isn't such movie
      * @throws IllegalArgumentException if ID is null
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<String> getMovie(@PathVariable("id") final Integer id) {
-        return getDataResponseEntity(movieFacade.getMovie(id));
+    @RequestMapping("/{id}")
+    public Movie getMovie(@PathVariable("id") final Integer id) {
+        return movieFacade.getMovie(id);
     }
 
     /**
      * Adds movie. Sets new ID and position.
      *
      * @param movie movie
-     * @return response status
      * @throws IllegalArgumentException if movie is null
      *                                  or ID isn't null
      *                                  or czech name is null
@@ -106,18 +105,15 @@ public class MovieController extends AbstractCatalogController {
      *                                  or genre name is empty string
      *                                  or genre doesn't exist in data storage
      */
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseEntity<Void> add(@RequestBody final String movie) {
-        movieFacade.add(deserialize(movie, Movie.class));
-
-        return getEmptyResponseEntity();
+    @PutMapping("/add")
+    public void add(@RequestBody final Movie movie) {
+        movieFacade.add(movie);
     }
 
     /**
      * Updates movie.
      *
      * @param movie new value of movie
-     * @return response status
      * @throws IllegalArgumentException if movie is null
      *                                  or ID is null
      *                                  or czech name is null
@@ -145,89 +141,71 @@ public class MovieController extends AbstractCatalogController {
      *                                  or movie doesn't exist in data storage
      *                                  or genre doesn't exist in data storage
      */
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public ResponseEntity<Void> update(@RequestBody final String movie) {
-        movieFacade.update(deserialize(movie, Movie.class));
-
-        return getEmptyResponseEntity();
+    @PostMapping("/update")
+    public void update(@RequestBody final Movie movie) {
+        movieFacade.update(movie);
     }
 
     /**
      * Removes movie.
      *
      * @param movie movie
-     * @return response status
      * @throws IllegalArgumentException if movie is null
      *                                  or ID is null
      *                                  or movie doesn't exist in data storage
      */
-    @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    public ResponseEntity<Void> remove(@RequestBody final String movie) {
-        movieFacade.remove(deserialize(movie, Movie.class));
-
-        return getEmptyResponseEntity();
+    @DeleteMapping("/remove")
+    public void remove(@RequestBody final Movie movie) {
+        movieFacade.remove(movie);
     }
 
     /**
      * Duplicates movie.
      *
      * @param movie movie
-     * @return response status
      * @throws IllegalArgumentException if movie is null
      *                                  or ID is null
      *                                  or movie doesn't exist in data storage
      */
-    @RequestMapping(value = "/duplicate", method = RequestMethod.POST)
-    public ResponseEntity<Void> duplicate(@RequestBody final String movie) {
-        movieFacade.duplicate(deserialize(movie, Movie.class));
-
-        return getEmptyResponseEntity();
+    @PostMapping("/duplicate")
+    public void duplicate(@RequestBody final Movie movie) {
+        movieFacade.duplicate(movie);
     }
 
     /**
      * Moves movie in list one position up.
      *
      * @param movie movie
-     * @return response status
      * @throws IllegalArgumentException if movie is null
      *                                  or ID is null
      *                                  or movie can't be moved up
      *                                  or movie doesn't exist in data storage
      */
-    @RequestMapping(value = "/moveUp", method = RequestMethod.POST)
-    public ResponseEntity<Void> moveUp(@RequestBody final String movie) {
-        movieFacade.moveUp(deserialize(movie, Movie.class));
-
-        return getEmptyResponseEntity();
+    @PostMapping("/moveUp")
+    public void moveUp(@RequestBody final Movie movie) {
+        movieFacade.moveUp(movie);
     }
 
     /**
      * Moves movie in list one position down.
      *
      * @param movie movie
-     * @return response status
      * @throws IllegalArgumentException if movie is null
      *                                  or ID is null
      *                                  or movie can't be moved down
      *                                  or movie doesn't exist in data storage
      */
-    @RequestMapping(value = "/moveDown", method = RequestMethod.POST)
-    public ResponseEntity<Void> moveDown(@RequestBody final String movie) {
-        movieFacade.moveDown(deserialize(movie, Movie.class));
-
-        return getEmptyResponseEntity();
+    @PostMapping("/moveDown")
+    public void moveDown(@RequestBody final Movie movie) {
+        movieFacade.moveDown(movie);
     }
 
     /**
      * Updates positions.
-     *
-     * @return response status
      */
-    @RequestMapping(value = "/updatePositions", method = RequestMethod.POST)
-    public ResponseEntity<Void> updatePositions() {
+    @PostMapping("/updatePositions")
+    public void updatePositions() {
         movieFacade.updatePositions();
-
-        return getEmptyResponseEntity();
     }
 
     /**
@@ -235,9 +213,9 @@ public class MovieController extends AbstractCatalogController {
      *
      * @return total count of media
      */
-    @RequestMapping(value = "/totalMedia", method = RequestMethod.GET)
-    public ResponseEntity<String> getTotalMediaCount() {
-        return getDataResponseEntity(movieFacade.getTotalMediaCount());
+    @GetMapping("/totalMedia")
+    public Integer getTotalMediaCount() {
+        return movieFacade.getTotalMediaCount();
     }
 
     /**
@@ -245,9 +223,9 @@ public class MovieController extends AbstractCatalogController {
      *
      * @return total length of all movies
      */
-    @RequestMapping(value = "/totalLength", method = RequestMethod.GET)
-    public ResponseEntity<String> getTotalLength() {
-        return getDataResponseEntity(movieFacade.getTotalLength());
+    @GetMapping("/totalLength")
+    public Integer getTotalLength() {
+        return movieFacade.getTotalLength().getLength();
     }
 
 }

@@ -1,17 +1,21 @@
 package cz.vhromada.catalog.rest.controller;
 
+import java.util.List;
+
 import cz.vhromada.catalog.entity.Program;
 import cz.vhromada.catalog.facade.ProgramFacade;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * A class represents controller for programs.
@@ -21,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller("programController")
 @RequestMapping("/programs")
 @CrossOrigin
-public class ProgramController extends AbstractCatalogController {
+public class ProgramController {
 
     /**
      * Facade for programs
@@ -43,14 +47,10 @@ public class ProgramController extends AbstractCatalogController {
 
     /**
      * Creates new data.
-     *
-     * @return response status
      */
-    @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public ResponseEntity<Void> newData() {
+    @PostMapping("/new")
+    public void newData() {
         programFacade.newData();
-
-        return getEmptyResponseEntity();
     }
 
     /**
@@ -58,9 +58,9 @@ public class ProgramController extends AbstractCatalogController {
      *
      * @return list of programs
      */
-    @RequestMapping(value = { "", "/", "list" }, method = RequestMethod.GET)
-    public ResponseEntity<String> getPrograms() {
-        return getDataResponseEntity(programFacade.getPrograms());
+    @GetMapping({ "", "/", "/list" })
+    public List<Program> getPrograms() {
+        return programFacade.getPrograms();
     }
 
     /**
@@ -70,16 +70,15 @@ public class ProgramController extends AbstractCatalogController {
      * @return program with ID or null if there isn't such program
      * @throws IllegalArgumentException if ID is null
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<String> getProgram(@PathVariable("id") final Integer id) {
-        return getDataResponseEntity(programFacade.getProgram(id));
+    @GetMapping("/{id}")
+    public Program getProgram(@PathVariable("id") final Integer id) {
+        return programFacade.getProgram(id);
     }
 
     /**
      * Adds program. Sets new ID and position.
      *
      * @param program program
-     * @return response status
      * @throws IllegalArgumentException if program is null
      *                                  or ID isn't null
      *                                  or name is null
@@ -90,18 +89,15 @@ public class ProgramController extends AbstractCatalogController {
      *                                  or other data is null
      *                                  or note is null
      */
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseEntity<Void> add(@RequestBody final String program) {
-        programFacade.add(deserialize(program, Program.class));
-
-        return getEmptyResponseEntity();
+    @PutMapping("/add")
+    public void add(@RequestBody final Program program) {
+        programFacade.add(program);
     }
 
     /**
      * Updates program.
      *
      * @param program new value of program
-     * @return response status
      * @throws IllegalArgumentException if program is null
      *                                  or ID is null
      *                                  or name is null
@@ -113,89 +109,71 @@ public class ProgramController extends AbstractCatalogController {
      *                                  or note is null
      *                                  or program doesn't exist in data storage
      */
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public ResponseEntity<Void> update(@RequestBody final String program) {
-        programFacade.update(deserialize(program, Program.class));
-
-        return getEmptyResponseEntity();
+    @PostMapping("/update")
+    public void update(@RequestBody final Program program) {
+        programFacade.update(program);
     }
 
     /**
      * Removes program.
      *
      * @param program program
-     * @return response status
      * @throws IllegalArgumentException if program is null
      *                                  or ID is null
      *                                  or program doesn't exist in data storage
      */
-    @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    public ResponseEntity<Void> remove(@RequestBody final String program) {
-        programFacade.remove(deserialize(program, Program.class));
-
-        return getEmptyResponseEntity();
+    @DeleteMapping("/remove")
+    public void remove(@RequestBody final Program program) {
+        programFacade.remove(program);
     }
 
     /**
      * Duplicates program.
      *
      * @param program program
-     * @return response status
      * @throws IllegalArgumentException if program is null
      *                                  or ID is null
      *                                  or program doesn't exist in data storage
      */
-    @RequestMapping(value = "/duplicate", method = RequestMethod.POST)
-    public ResponseEntity<Void> duplicate(@RequestBody final String program) {
-        programFacade.duplicate(deserialize(program, Program.class));
-
-        return getEmptyResponseEntity();
+    @PostMapping("/duplicate")
+    public void duplicate(@RequestBody final Program program) {
+        programFacade.duplicate(program);
     }
 
     /**
      * Moves program in list one position up.
      *
      * @param program program
-     * @return response status
      * @throws IllegalArgumentException if program is null
      *                                  or ID is null
      *                                  or program can't be moved up
      *                                  or program doesn't exist in data storage
      */
-    @RequestMapping(value = "/moveUp", method = RequestMethod.POST)
-    public ResponseEntity<Void> moveUp(@RequestBody final String program) {
-        programFacade.moveUp(deserialize(program, Program.class));
-
-        return getEmptyResponseEntity();
+    @PostMapping("/moveUp")
+    public void moveUp(@RequestBody final Program program) {
+        programFacade.moveUp(program);
     }
 
     /**
      * Moves program in list one position down.
      *
      * @param program program
-     * @return response status
      * @throws IllegalArgumentException if program is null
      *                                  or ID is null
      *                                  or program can't be moved down
      *                                  or program doesn't exist in data storage
      */
-    @RequestMapping(value = "/moveDown", method = RequestMethod.POST)
-    public ResponseEntity<Void> moveDown(@RequestBody final String program) {
-        programFacade.moveDown(deserialize(program, Program.class));
-
-        return getEmptyResponseEntity();
+    @PostMapping("/moveDown")
+    public void moveDown(@RequestBody final Program program) {
+        programFacade.moveDown(program);
     }
 
     /**
      * Updates positions.
-     *
-     * @return response status
      */
-    @RequestMapping(value = "/updatePositions", method = RequestMethod.POST)
-    public ResponseEntity<Void> updatePositions() {
+    @PostMapping("/updatePositions")
+    public void updatePositions() {
         programFacade.updatePositions();
-
-        return getEmptyResponseEntity();
     }
 
     /**
@@ -203,9 +181,9 @@ public class ProgramController extends AbstractCatalogController {
      *
      * @return total count of media
      */
-    @RequestMapping(value = "/totalMedia", method = RequestMethod.GET)
-    public ResponseEntity<String> getTotalMediaCount() {
-        return getDataResponseEntity(programFacade.getTotalMediaCount());
+    @GetMapping("/totalMedia")
+    public Integer getTotalMediaCount() {
+        return programFacade.getTotalMediaCount();
     }
 
 }

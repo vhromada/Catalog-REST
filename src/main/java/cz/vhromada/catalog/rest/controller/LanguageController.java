@@ -1,31 +1,33 @@
 package cz.vhromada.catalog.rest.controller;
 
 import java.util.Arrays;
+import java.util.List;
 
 import cz.vhromada.catalog.common.Language;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @author vladimir.hromada
+ * A class represents controller for language.
+ *
+ * @author Vladimir Hromada
  */
 @RestController("languageController")
 @RequestMapping("/languages")
 @CrossOrigin
-public class LanguageController extends AbstractCatalogController {
+public class LanguageController {
 
     /**
      * Returns list of languages.
      *
      * @return list of languages
      */
-    @RequestMapping(value = { "", "/", "list" }, method = RequestMethod.GET)
-    public ResponseEntity<String> getLanguages() {
-        return getDataResponseEntity(Language.values());
+    @GetMapping({ "", "/", "/list" })
+    public List<Language> getLanguages() {
+        return Arrays.asList(Language.values());
     }
 
     /**
@@ -33,9 +35,9 @@ public class LanguageController extends AbstractCatalogController {
      *
      * @return list of subtitles
      */
-    @RequestMapping(value = { "subtitles" }, method = RequestMethod.GET)
-    public ResponseEntity<String> getSubtitles() {
-        return getDataResponseEntity(Arrays.asList(Language.CZ, Language.EN));
+    @GetMapping("/subtitles")
+    public List<Language> getSubtitles() {
+        return Arrays.asList(Language.CZ, Language.EN);
     }
 
 }
