@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.rest.controller;
+package cz.vhromada.catalog.rest;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
