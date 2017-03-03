@@ -2,8 +2,11 @@ package cz.vhromada.catalog.rest.controller;
 
 import java.util.List;
 
+import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.facade.ShowFacade;
+import cz.vhromada.result.Result;
+import cz.vhromada.result.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author Vladimir Hromada
  */
 @Controller("showController")
-@RequestMapping("/shows")
+@RequestMapping("/catalog/shows")
 @CrossOrigin
 public class ShowController {
 
@@ -47,189 +50,227 @@ public class ShowController {
 
     /**
      * Creates new data.
+     *
+     * @return result
      */
     @PostMapping("/new")
-    public void newData() {
-        showFacade.newData();
+    public Result<Void> newData() {
+        return showFacade.newData();
     }
 
     /**
      * Returns list of shows.
      *
-     * @return list of shows
+     * @return result with list of shows
      */
-    @GetMapping({ "", "/", "list" })
-    public List<Show> getShows() {
-        return showFacade.getShows();
+    @GetMapping({ "", "/", "/list" })
+    public Result<List<Show>> getShows() {
+        return showFacade.getAll();
     }
 
     /**
      * Returns show with ID or null if there isn't such show.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>ID is null</li>
+     * </ul>
      *
      * @param id ID
-     * @return show with ID or null if there isn't such show
-     * @throws IllegalArgumentException if ID is null
+     * @return result with show or validation errors
      */
-    @PostMapping("/{id}")
-    public Show getShow(@PathVariable("id") final Integer id) {
-        return showFacade.getShow(id);
+    @GetMapping("/{id}")
+    public Result<Show> getShow(@PathVariable("id") final Integer id) {
+        return showFacade.get(id);
     }
 
     /**
      * Adds show. Sets new ID and position.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Show is null</li>
+     * <li>ID isn't null</li>
+     * <li>Czech name is null</li>
+     * <li>Czech name is empty string</li>
+     * <li>Original name is null</li>
+     * <li>Original name is empty string</li>
+     * <li>URL to ČSFD page about show is null</li>
+     * <li>IMDB code isn't -1 or between 1 and 9999999</li>
+     * <li>URL to english Wikipedia page about show is null</li>
+     * <li>URL to czech Wikipedia page about show is null</li>
+     * <li>Path to file with show's picture is null</li>
+     * <li>Note is null</li>
+     * <li>Genres are null</li>
+     * <li>Genres contain null value</li>
+     * <li>Genre ID is null</li>
+     * <li>Genre name is null</li>
+     * <li>Genre name is empty string</li>
+     * <li>Genre doesn't exist</li>
+     * </ul>
      *
      * @param show show
-     * @throws IllegalArgumentException if show is null
-     *                                  or ID isn't null
-     *                                  or czech name is null
-     *                                  or czech name is empty string
-     *                                  or original name is null
-     *                                  or original name is empty string
-     *                                  or URL to ČSFD page about show is null
-     *                                  or IMDB code isn't -1 or between 1 and 9999999
-     *                                  or URL to english Wikipedia page about show is null
-     *                                  or URL to czech Wikipedia page about show is null
-     *                                  or path to file with show picture is null
-     *                                  or count of seasons is negative number
-     *                                  or count of episodes is negative number
-     *                                  or total length of seasons is null
-     *                                  or total length of seasons is negative number
-     *                                  or note is null
-     *                                  or genres are null
-     *                                  or genres contain null value
-     *                                  or genre ID is null
-     *                                  or genre name is null
-     *                                  or genre name is empty string
-     *                                  or genre doesn't exist in data storage
+     * @return result with validation errors
      */
     @PutMapping("/add")
-    public void add(@RequestBody final Show show) {
-        showFacade.add(show);
+    public Result<Void> add(@RequestBody final Show show) {
+        return showFacade.add(show);
     }
 
     /**
      * Updates show.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Show is null</li>
+     * <li>ID is null</li>
+     * <li>Czech name is null</li>
+     * <li>Czech name is empty string</li>
+     * <li>Original name is null</li>
+     * <li>Original name is empty string</li>
+     * <li>URL to ČSFD page about show is null</li>
+     * <li>IMDB code isn't -1 or between 1 and 9999999</li>
+     * <li>URL to english Wikipedia page about show is null</li>
+     * <li>URL to czech Wikipedia page about show is null</li>
+     * <li>Path to file with show's picture is null</li>
+     * <li>Note is null</li>
+     * <li>Genres are null</li>
+     * <li>Genres contain null value</li>
+     * <li>Genre ID is null</li>
+     * <li>Genre name is null</li>
+     * <li>Genre name is empty string</li>
+     * <li>Genre doesn't exist</li>
+     * <li>Show doesn't exist in data storage</li>
+     * </ul>
      *
      * @param show new value of show
-     * @throws IllegalArgumentException if show is null
-     *                                  or ID is null
-     *                                  or czech name is null
-     *                                  or czech name is empty string
-     *                                  or original name is null
-     *                                  or original name is empty string
-     *                                  or URL to ČSFD page about show is null
-     *                                  or IMDB code isn't -1 or between 1 and 9999999
-     *                                  or URL to english Wikipedia page about show is null
-     *                                  or URL to czech Wikipedia page about show is null
-     *                                  or path to file with show picture is null
-     *                                  or count of seasons is negative number
-     *                                  or count of episodes is negative number
-     *                                  or total length of seasons is null
-     *                                  or total length of seasons is negative number
-     *                                  or note is null
-     *                                  or genres are null
-     *                                  or genres contain null value
-     *                                  or genre ID is null
-     *                                  or genre name is null
-     *                                  or genre name is empty string
-     *                                  or genre name is empty string
-     *                                  or show doesn't exist in data storage
-     *                                  or genre doesn't exist in data storage
+     * @return result with validation errors
      */
     @PostMapping("/update")
-    public void update(@RequestBody final Show show) {
-        showFacade.update(show);
+    public Result<Void> update(@RequestBody final Show show) {
+        return showFacade.update(show);
     }
 
     /**
      * Removes show.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Show is null</li>
+     * <li>ID is null</li>
+     * <li>Show doesn't exist in data storage</li>
+     * </ul>
      *
      * @param show show
-     * @throws IllegalArgumentException if show is null
-     *                                  or ID is null
-     *                                  or show doesn't exist in data storage
+     * @return result with validation errors
      */
     @DeleteMapping("/remove")
-    public void remove(@RequestBody final Show show) {
-        showFacade.remove(show);
+    public Result<Void> remove(@RequestBody final Show show) {
+        return showFacade.remove(show);
     }
 
     /**
      * Duplicates show.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Show is null</li>
+     * <li>ID is null</li>
+     * <li>Show doesn't exist in data storage</li>
+     * </ul>
      *
      * @param show show
-     * @throws IllegalArgumentException if show is null
-     *                                  or ID is null
-     *                                  or show doesn't exist in data storage
+     * @return result with validation errors
      */
     @PostMapping("/duplicate")
-    public void duplicate(@RequestBody final Show show) {
-        showFacade.duplicate(show);
+    public Result<Void> duplicate(@RequestBody final Show show) {
+        return showFacade.duplicate(show);
     }
 
     /**
      * Moves show in list one position up.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Show is null</li>
+     * <li>ID is null</li>
+     * <li>Show can't be moved up</li>
+     * <li>Show doesn't exist in data storage</li>
+     * </ul>
      *
      * @param show show
-     * @throws IllegalArgumentException if show is null
-     *                                  or ID is null
-     *                                  or show can't be moved up
-     *                                  or show doesn't exist in data storage
+     * @return result with validation errors
      */
     @PostMapping("/moveUp")
-    public void moveUp(@RequestBody final Show show) {
-        showFacade.moveUp(show);
+    public Result<Void> moveUp(@RequestBody final Show show) {
+        return showFacade.moveUp(show);
     }
 
     /**
      * Moves show in list one position down.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Show is null</li>
+     * <li>ID is null</li>
+     * <li>Show can't be moved down</li>
+     * <li>Show doesn't exist in data storage</li>
+     * </ul>
      *
      * @param show show
-     * @throws IllegalArgumentException if show is null
-     *                                  or ID is null
-     *                                  or show can't be moved down
-     *                                  or show doesn't exist in data storage
+     * @return result with validation errors
      */
     @PostMapping("/moveDown")
-    public void moveDown(@RequestBody final Show show) {
-        showFacade.moveDown(show);
+    public Result<Void> moveDown(@RequestBody final Show show) {
+        return showFacade.moveDown(show);
     }
 
     /**
      * Updates positions.
+     *
+     * @return result
      */
     @PostMapping("/updatePositions")
-    public void updatePositions() {
-        showFacade.updatePositions();
+    public Result<Void> updatePositions() {
+        return showFacade.updatePositions();
     }
 
     /**
      * Returns total length of all shows.
      *
-     * @return total length of all shows
+     * @return result with total length of all shows
      */
     @GetMapping("/totalLength")
-    public Integer getTotalLength() {
-        return showFacade.getTotalLength().getLength();
+    public Result<Integer> getTotalLength() {
+        final Result<Time> lengthResult = showFacade.getTotalLength();
+
+        if (Status.OK.equals(lengthResult.getStatus())) {
+            return Result.of(lengthResult.getData().getLength());
+        }
+
+        final Result<Integer> result = new Result<>();
+        result.addEvents(lengthResult.getEvents());
+
+        return result;
     }
 
     /**
      * Returns count of seasons from all shows.
      *
-     * @return count of seasons from all shows
+     * @return result with count of seasons from all shows
      */
     @GetMapping("/seasonsCount")
-    public Integer getSeasonsCount() {
+    public Result<Integer> getSeasonsCount() {
         return showFacade.getSeasonsCount();
     }
 
     /**
      * Returns count of episodes from all shows.
      *
-     * @return count of episodes from all shows
+     * @return result with count of episodes from all shows
      */
     @GetMapping("/episodesCount")
-    public Integer getEpisodesCount() {
+    public Result<Integer> getEpisodesCount() {
         return showFacade.getEpisodesCount();
     }
 

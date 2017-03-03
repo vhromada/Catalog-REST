@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import cz.vhromada.catalog.common.Language;
+import cz.vhromada.result.Result;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,28 +17,28 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Vladimir Hromada
  */
 @RestController("languageController")
-@RequestMapping("/languages")
+@RequestMapping("/catalog/languages")
 @CrossOrigin
 public class LanguageController {
 
     /**
      * Returns list of languages.
      *
-     * @return list of languages
+     * @return result with list of languages
      */
     @GetMapping({ "", "/", "/list" })
-    public List<Language> getLanguages() {
-        return Arrays.asList(Language.values());
+    public Result<List<Language>> getLanguages() {
+        return Result.of(Arrays.asList(Language.values()));
     }
 
     /**
      * Returns list of subtitles.
      *
-     * @return list of subtitles
+     * @return result with list of subtitles
      */
     @GetMapping("/subtitles")
-    public List<Language> getSubtitles() {
-        return Arrays.asList(Language.CZ, Language.EN);
+    public Result<List<Language>> getSubtitles() {
+        return Result.of(Arrays.asList(Language.CZ, Language.EN));
     }
 
 }

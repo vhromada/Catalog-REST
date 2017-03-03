@@ -4,6 +4,7 @@ import java.util.List;
 
 import cz.vhromada.catalog.entity.Game;
 import cz.vhromada.catalog.facade.GameFacade;
+import cz.vhromada.result.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author Vladimir Hromada
  */
 @Controller("gameController")
-@RequestMapping("/games")
+@RequestMapping("/catalog/games")
 @CrossOrigin
 public class GameController {
 
@@ -47,142 +48,180 @@ public class GameController {
 
     /**
      * Creates new data.
+     *
+     * @return result
      */
     @PostMapping("/new")
-    public void newData() {
-        gameFacade.newData();
+    public Result<Void> newData() {
+        return gameFacade.newData();
     }
 
     /**
      * Returns list of games.
      *
-     * @return list of games
+     * @return result with list of games
      */
     @GetMapping({ "", "/", "/list" })
-    public List<Game> getGames() {
-        return gameFacade.getGames();
+    public Result<List<Game>> getGames() {
+        return gameFacade.getAll();
     }
 
     /**
      * Returns game with ID or null if there isn't such game.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>ID is null</li>
+     * </ul>
      *
      * @param id ID
-     * @return game with ID or null if there isn't such game
-     * @throws IllegalArgumentException if ID is null
+     * @return result with game or validation errors
      */
     @GetMapping("/{id}")
-    public Game getGame(@PathVariable("id") final Integer id) {
-        return gameFacade.getGame(id);
+    public Result<Game> getGame(@PathVariable("id") final Integer id) {
+        return gameFacade.get(id);
     }
 
     /**
      * Adds game. Sets new ID and position.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Game is null</li>
+     * <li>ID isn't null</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>URL to english Wikipedia page about game is null</li>
+     * <li>URL to czech Wikipedia page about game is null</li>
+     * <li>Count of media isn't positive number</li>
+     * <li>Other data is null</li>
+     * <li>Note is null</li>
+     * </ul>
      *
      * @param game game
-     * @throws IllegalArgumentException if game is null
-     *                                  or ID isn't null
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or URL to english Wikipedia page about game is null
-     *                                  or URL to czech Wikipedia page about game is null
-     *                                  or count of media isn't positive number
-     *                                  or other data is null
-     *                                  or note is null
+     * @return result with validation errors
      */
     @PutMapping("/add")
-    public void add(@RequestBody final Game game) {
-        gameFacade.add(game);
+    public Result<Void> add(@RequestBody final Game game) {
+        return gameFacade.add(game);
     }
 
     /**
      * Updates game.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Game is null</li>
+     * <li>ID is null</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>URL to english Wikipedia page about game is null</li>
+     * <li>URL to czech Wikipedia page about game is null</li>
+     * <li>Count of media isn't positive number</li>
+     * <li>Other data is null</li>
+     * <li>Note is null</li>
+     * <li>Game doesn't exist in data storage</li>
+     * </ul>
      *
      * @param game new value of game
-     * @throws IllegalArgumentException if game is null
-     *                                  or ID is null
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or URL to english Wikipedia page about game is null
-     *                                  or URL to czech Wikipedia page about game is null
-     *                                  or count of media isn't positive number
-     *                                  or other data is null
-     *                                  or note is null
-     *                                  or game doesn't exist in data storage
+     * @return result with validation errors
      */
     @PostMapping("/update")
-    public void update(@RequestBody final Game game) {
-        gameFacade.update(game);
+    public Result<Void> update(@RequestBody final Game game) {
+        return gameFacade.update(game);
     }
 
     /**
      * Removes game.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Game is null</li>
+     * <li>ID is null</li>
+     * <li>Game doesn't exist in data storage</li>
+     * </ul>
      *
      * @param game game
-     * @throws IllegalArgumentException if game is null
-     *                                  or ID is null
-     *                                  or game doesn't exist in data storage
+     * @return result with validation errors
      */
     @DeleteMapping("/remove")
-    public void remove(@RequestBody final Game game) {
-        gameFacade.remove(game);
+    public Result<Void> remove(@RequestBody final Game game) {
+        return gameFacade.remove(game);
     }
 
     /**
      * Duplicates game.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Game is null</li>
+     * <li>ID is null</li>
+     * <li>Game doesn't exist in data storage</li>
+     * </ul>
      *
      * @param game game
-     * @throws IllegalArgumentException if game is null
-     *                                  or ID is null
-     *                                  or game doesn't exist in data storage
+     * @return result with validation errors
      */
     @PostMapping("/duplicate")
-    public void duplicate(@RequestBody final Game game) {
-        gameFacade.duplicate(game);
+    public Result<Void> duplicate(@RequestBody final Game game) {
+        return gameFacade.duplicate(game);
     }
 
     /**
      * Moves game in list one position up.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Game is null</li>
+     * <li>ID is null</li>
+     * <li>Game can't be moved up</li>
+     * <li>Game doesn't exist in data storage</li>
+     * </ul>
      *
      * @param game game
-     * @throws IllegalArgumentException if game is null
-     *                                  or ID is null
-     *                                  or game can't be moved up
-     *                                  or game doesn't exist in data storage
+     * @return result with validation errors
      */
     @PostMapping("/moveUp")
-    public void moveUp(@RequestBody final Game game) {
-        gameFacade.moveUp(game);
+    public Result<Void> moveUp(@RequestBody final Game game) {
+        return gameFacade.moveUp(game);
     }
 
     /**
      * Moves game in list one position down.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Game is null</li>
+     * <li>ID is null</li>
+     * <li>Game can't be moved down</li>
+     * <li>Game doesn't exist in data storage</li>
+     * </ul>
      *
      * @param game game
-     * @throws IllegalArgumentException if game is null
-     *                                  or ID is null
-     *                                  or game can't be moved down
-     *                                  or game doesn't exist in data storage
+     * @return result with validation errors
      */
     @PostMapping("/moveDown")
-    public void moveDown(@RequestBody final Game game) {
-        gameFacade.moveDown(game);
+    public Result<Void> moveDown(@RequestBody final Game game) {
+        return gameFacade.moveDown(game);
     }
 
     /**
      * Updates positions.
+     *
+     * @return result
      */
     @PostMapping("/updatePositions")
-    public void updatePositions() {
-        gameFacade.updatePositions();
+    public Result<Void> updatePositions() {
+        return gameFacade.updatePositions();
     }
 
     /**
      * Returns total count of media.
      *
-     * @return total count of media
+     * @return result with total count of media
      */
     @GetMapping("/totalMedia")
-    public Integer getTotalMediaCount() {
+    public Result<Integer> getTotalMediaCount() {
         return gameFacade.getTotalMediaCount();
     }
 

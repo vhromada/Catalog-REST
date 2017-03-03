@@ -2,8 +2,11 @@ package cz.vhromada.catalog.rest.controller;
 
 import java.util.List;
 
+import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.facade.MusicFacade;
+import cz.vhromada.result.Result;
+import cz.vhromada.result.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author Vladimir Hromada
  */
 @Controller("musicController")
-@RequestMapping("/music")
+@RequestMapping("/catalog/music")
 @CrossOrigin
 public class MusicController {
 
@@ -47,160 +50,209 @@ public class MusicController {
 
     /**
      * Creates new data.
+     *
+     * @return result
      */
     @PostMapping("/new")
-    public void newData() {
-        musicFacade.newData();
+    public Result<Void> newData() {
+        return musicFacade.newData();
     }
 
     /**
      * Returns list of music.
      *
-     * @return list of music
+     * @return result with list of music
      */
-    @GetMapping({ "", "/", "list" })
-    public List<Music> getMusic() {
-        return musicFacade.getMusic();
+    @GetMapping({ "", "/", "/list" })
+    public Result<List<Music>> getMusic() {
+        return musicFacade.getAll();
     }
 
     /**
      * Returns music with ID or null if there isn't such music.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>ID is null</li>
+     * </ul>
      *
      * @param id ID
-     * @return music with ID or null if there isn't such music
-     * @throws IllegalArgumentException if ID is null
+     * @return result with music or validation errors
      */
     @GetMapping("/{id}")
-    public Music getMusic(@PathVariable("id") final Integer id) {
-        return musicFacade.getMusic(id);
+    public Result<Music> getMusic(@PathVariable("id") final Integer id) {
+        return musicFacade.get(id);
     }
 
     /**
      * Adds music. Sets new ID and position.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Music is null</li>
+     * <li>ID isn't null</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>URL to english Wikipedia page about music is null</li>
+     * <li>URL to czech Wikipedia page about music is null</li>
+     * <li>Count of media isn't positive number</li>
+     * <li>Other data is null</li>
+     * <li>Note is null</li>
+     * </ul>
      *
      * @param music music
-     * @throws IllegalArgumentException if music is null
-     *                                  or ID isn't null
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or URL to english Wikipedia page about music is null
-     *                                  or URL to czech Wikipedia page about music is null
-     *                                  or count of media isn't positive number
-     *                                  or note is null
+     * @return result with validation errors
      */
-    @PutMapping
-    public void add(@RequestBody final Music music) {
-        musicFacade.add(music);
+    @PutMapping("/add")
+    public Result<Void> add(@RequestBody final Music music) {
+        return musicFacade.add(music);
     }
 
     /**
      * Updates music.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Music is null</li>
+     * <li>ID is null</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>URL to english Wikipedia page about music is null</li>
+     * <li>URL to czech Wikipedia page about music is null</li>
+     * <li>Count of media isn't positive number</li>
+     * <li>Other data is null</li>
+     * <li>Note is null</li>
+     * <li>Music doesn't exist in data storage</li>
+     * </ul>
      *
      * @param music new value of music
-     * @throws IllegalArgumentException if music is null
-     *                                  or ID is null
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or URL to english Wikipedia page about music is null
-     *                                  or URL to czech Wikipedia page about music is null
-     *                                  or count of media isn't positive number
-     *                                  or note is null
-     *                                  or music doesn't exist in data storage
+     * @return result with validation errors
      */
     @PostMapping("/update")
-    public void update(@RequestBody final Music music) {
-        musicFacade.update(music);
+    public Result<Void> update(@RequestBody final Music music) {
+        return musicFacade.update(music);
     }
 
     /**
      * Removes music.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Music is null</li>
+     * <li>ID is null</li>
+     * <li>Music doesn't exist in data storage</li>
+     * </ul>
      *
      * @param music music
-     * @throws IllegalArgumentException if music is null
-     *                                  or ID is null
-     *                                  or music doesn't exist in data storage
+     * @return result with validation errors
      */
     @DeleteMapping("/remove")
-    public void remove(@RequestBody final Music music) {
-        musicFacade.remove(music);
+    public Result<Void> remove(@RequestBody final Music music) {
+        return musicFacade.remove(music);
     }
 
     /**
      * Duplicates music.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Music is null</li>
+     * <li>ID is null</li>
+     * <li>Music doesn't exist in data storage</li>
+     * </ul>
      *
      * @param music music
-     * @throws IllegalArgumentException if music is null
-     *                                  or ID is null
-     *                                  or music doesn't exist in data storage
+     * @return result with validation errors
      */
     @PostMapping("/duplicate")
-    public void duplicate(@RequestBody final Music music) {
-        musicFacade.duplicate(music);
+    public Result<Void> duplicate(@RequestBody final Music music) {
+        return musicFacade.duplicate(music);
     }
 
     /**
      * Moves music in list one position up.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Music is null</li>
+     * <li>ID is null</li>
+     * <li>Music can't be moved up</li>
+     * <li>Music doesn't exist in data storage</li>
+     * </ul>
      *
      * @param music music
-     * @throws IllegalArgumentException if music is null
-     *                                  or ID is null
-     *                                  or music can't be moved up
-     *                                  or music doesn't exist in data storage
+     * @return result with validation errors
      */
     @PostMapping("/moveUp")
-    public void moveUp(@RequestBody final Music music) {
-        musicFacade.moveUp(music);
+    public Result<Void> moveUp(@RequestBody final Music music) {
+        return musicFacade.moveUp(music);
     }
 
     /**
      * Moves music in list one position down.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Music is null</li>
+     * <li>ID is null</li>
+     * <li>Music can't be moved down</li>
+     * <li>Music doesn't exist in data storage</li>
+     * </ul>
      *
      * @param music music
-     * @throws IllegalArgumentException if music is null
-     *                                  or ID is null
-     *                                  or music can't be moved down
-     *                                  or music doesn't exist in data storage
+     * @return result with validation errors
      */
     @PostMapping("/moveDown")
-    public void moveDown(@RequestBody final Music music) {
-        musicFacade.moveDown(music);
+    public Result<Void> moveDown(@RequestBody final Music music) {
+        return musicFacade.moveDown(music);
     }
 
     /**
      * Updates positions.
+     *
+     * @return result
      */
     @PostMapping("/updatePositions")
-    public void updatePositions() {
-        musicFacade.updatePositions();
+    public Result<Void> updatePositions() {
+        return musicFacade.updatePositions();
     }
 
     /**
      * Returns total count of media.
      *
-     * @return total count of media
+     * @return result with total count of media
      */
     @GetMapping("/totalMedia")
-    public Integer getTotalMediaCount() {
+    public Result<Integer> getTotalMediaCount() {
         return musicFacade.getTotalMediaCount();
     }
 
     /**
      * Returns total length of all music.
      *
-     * @return total length of all music
+     * @return result with total length of all music
      */
     @GetMapping("/totalLength")
-    public Integer getTotalLength() {
-        return musicFacade.getTotalLength().getLength();
+    public Result<Integer> getTotalLength() {
+        final Result<Time> lengthResult = musicFacade.getTotalLength();
+
+        if (Status.OK.equals(lengthResult.getStatus())) {
+            return Result.of(lengthResult.getData().getLength());
+        }
+
+        final Result<Integer> result = new Result<>();
+        result.addEvents(lengthResult.getEvents());
+
+        return result;
     }
 
     /**
      * Returns count of songs from all music.
      *
-     * @return count of songs from all music
+     * @return result with count of songs from all music
      */
     @GetMapping("/songsCount")
-    public Integer getSongsCount() {
+    public Result<Integer> getSongsCount() {
         return musicFacade.getSongsCount();
     }
 

@@ -5,6 +5,7 @@ import java.util.List;
 import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.facade.SeasonFacade;
+import cz.vhromada.result.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author Vladimir Hromada
  */
 @Controller("seasonController")
-@RequestMapping("/shows/{showId}/seasons")
+@RequestMapping("/catalog/shows/{showId}/seasons")
 @CrossOrigin
 public class SeasonController {
 
@@ -48,139 +49,179 @@ public class SeasonController {
 
     /**
      * Returns season with ID or null if there isn't such season.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>ID is null</li>
+     * </ul>
      *
      * @param showId   show ID
      * @param seasonId season ID
-     * @return season with ID or null if there isn't such season
-     * @throws IllegalArgumentException if ID is null
+     * @return result with season or validation errors
      */
     @GetMapping("/{seasonId}")
-    public Season getSeason(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @PathVariable("seasonId") final Integer seasonId) {
-        return seasonFacade.getSeason(seasonId);
+    public Result<Season> getSeason(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+            @PathVariable("seasonId") final Integer seasonId) {
+        return seasonFacade.get(seasonId);
     }
 
     /**
      * Adds season. Sets new ID and position.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Show is null</li>
+     * <li>Show ID is null</li>
+     * <li>Show doesn't exist in season storage</li>
+     * <li>Season is null</li>
+     * <li>Season ID isn't null</li>
+     * <li>Number of season isn't positive number</li>
+     * <li>Starting year isn't between 1940 and current year</li>
+     * <li>Ending year isn't between 1940 and current year</li>
+     * <li>Starting year is greater than ending year</li>
+     * <li>Language is null</li>
+     * <li>Subtitles are null</li>
+     * <li>Subtitles contain null value</li>
+     * <li>Note is null</li>
+     * </ul>
      *
      * @param showId show ID
      * @param season season
-     * @throws IllegalArgumentException if season is null
-     *                                  or show ID is null
-     *                                  or season ID isn't null
-     *                                  or number of season isn't positive number
-     *                                  or starting year isn't between 1940 and current year
-     *                                  or ending year isn't between 1940 and current year
-     *                                  or starting year is greater than ending year
-     *                                  or language is null
-     *                                  or subtitles are null
-     *                                  or subtitles contain null value
-     *                                  or note is null
-     *                                  or show doesn't exist in data storage
+     * @return result with validation errors
      */
     @PutMapping("/add")
-    public void add(@PathVariable("showId") final Integer showId, @RequestBody final Season season) {
+    public Result<Void> add(@PathVariable("showId") final Integer showId, @RequestBody final Season season) {
         final Show show = new Show();
         show.setId(showId);
 
-        seasonFacade.add(show, season);
+        return seasonFacade.add(show, season);
     }
 
     /**
      * Updates season.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Season is null</li>
+     * <li>ID is null</li>
+     * <li>Number of season isn't positive number</li>
+     * <li>Starting year isn't between 1940 and current year</li>
+     * <li>Ending year isn't between 1940 and current year</li>
+     * <li>Starting year is greater than ending year</li>
+     * <li>Language is null</li>
+     * <li>Subtitles are null</li>
+     * <li>Subtitles contain null value</li>
+     * <li>Note is null</li>
+     * <li>Season doesn't exist in data storage</li>
+     * </ul>
      *
      * @param showId show ID
      * @param season new value of season
+     * @return result with validation errors
      * @throws IllegalArgumentException if season is null
-     *                                  or season ID is null
-     *                                  or number of season isn't positive number
-     *                                  or starting year isn't between 1940 and current year
-     *                                  or ending year isn't between 1940 and current year
-     *                                  or starting year is greater than ending year
-     *                                  or language is null
-     *                                  or subtitles are null
-     *                                  or subtitles contain null value
-     *                                  or note is null
-     *                                  or season doesn't exist in data storage
-     *                                  or show doesn't exist in data storage
      */
     @PostMapping("/update")
-    public void update(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
-        seasonFacade.update(season);
+    public Result<Void> update(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
+        return seasonFacade.update(season);
     }
 
     /**
      * Removes season.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Season is null</li>
+     * <li>ID is null</li>
+     * <li>Season doesn't exist in season storage</li>
+     * </ul>
      *
      * @param showId show ID
      * @param season season
-     * @throws IllegalArgumentException if season is null
-     *                                  or ID is null
-     *                                  or season doesn't exist in data storage
+     * @return result with validation errors
      */
     @DeleteMapping("/remove")
-    public void remove(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
-        seasonFacade.remove(season);
+    public Result<Void> remove(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
+        return seasonFacade.remove(season);
     }
 
     /**
      * Duplicates season.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Season is null</li>
+     * <li>ID is null</li>
+     * <li>Season doesn't exist in season storage</li>
+     * </ul>
      *
      * @param showId show ID
      * @param season season
-     * @throws IllegalArgumentException if season is null
-     *                                  or ID is null
-     *                                  or season doesn't exist in data storage
+     * @return result with validation errors
      */
     @RequestMapping("/duplicate")
-    public void duplicate(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
-        seasonFacade.duplicate(season);
+    public Result<Void> duplicate(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
+        return seasonFacade.duplicate(season);
     }
 
     /**
      * Moves season in list one position up.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Season is null</li>
+     * <li>ID is null</li>
+     * <li>Season can't be moved up</li>
+     * <li>Season doesn't exist in season storage</li>
+     * </ul>
      *
      * @param showId show ID
      * @param season season
-     * @throws IllegalArgumentException if season is null
-     *                                  or ID is null
-     *                                  or season can't be moved up
-     *                                  or season doesn't exist in data storage
+     * @return result with validation errors
      */
     @RequestMapping("/moveUp")
-    public void moveUp(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
-        seasonFacade.moveUp(season);
+    public Result<Void> moveUp(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
+        return seasonFacade.moveUp(season);
     }
 
     /**
      * Moves season in list one position down.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Season is null</li>
+     * <li>ID is null</li>
+     * <li>Season can't be moved down</li>
+     * <li>Season doesn't exist in season storage</li>
+     * </ul>
      *
      * @param showId show ID
      * @param season season
-     * @throws IllegalArgumentException if season is null
-     *                                  or ID is null
-     *                                  or season can't be moved down
-     *                                  or season doesn't exist in data storage
+     * @return result with validation errors
      */
     @RequestMapping("/moveDown")
-    public void moveDown(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
-        seasonFacade.moveDown(season);
+    public Result<Void> moveDown(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
+        return seasonFacade.moveDown(season);
     }
 
     /**
      * Returns list of seasons for specified show.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Show is null</li>
+     * <li>ID is null</li>
+     * <li>Show doesn't exist in data storage</li>
+     * </ul>
      *
      * @param showId show ID
-     * @return list of seasons for specified show
-     * @throws IllegalArgumentException if show is null
-     *                                  or ID is null
-     *                                  or show doesn't exist in data storage
+     * @return result with list of seasons or validation error
      */
     @GetMapping({ "", "/", "/list" })
-    public List<Season> findSeasonsByShow(@PathVariable("showId") final Integer showId) {
+    public Result<List<Season>> findSeasonsByShow(@PathVariable("showId") final Integer showId) {
         final Show show = new Show();
         show.setId(showId);
 
-        return seasonFacade.findSeasonsByShow(show);
+        return seasonFacade.find(show);
     }
 
 }

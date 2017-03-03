@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.rest.controller;
 
 import cz.vhromada.catalog.common.Time;
+import cz.vhromada.result.Result;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,20 +15,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author Vladimir Hromada
  */
 @Controller("timeController")
-@RequestMapping("/time")
+@RequestMapping("/catalog/time")
 @CrossOrigin
 public class TimeController {
 
     /**
      * Returns time.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Time is null</li>
+     * <li>Time is negative number</li>
+     * </ul>
      *
      * @param time time
-     * @return time
-     * @throws IllegalArgumentException if time in seconds is negative number
+     * @return result with time or validation errors
      */
     @GetMapping("/{time}")
-    public String getTime(@PathVariable final Integer time) {
-        return new Time(time).toString();
+    public Result<String> getTime(@PathVariable final Integer time) {
+        if (time == null) {
+            return Result.error("TIME_NULL", "Time mustn't be null.");
+        }
+        if (time < 0) {
+            return Result.error("TIME_NEGATIVE", "Time mustn't be negative number.");
+        }
+
+        return Result.of(new Time(time).toString());
     }
 
 }

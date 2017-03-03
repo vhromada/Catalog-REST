@@ -4,6 +4,7 @@ import java.util.List;
 
 import cz.vhromada.catalog.entity.Program;
 import cz.vhromada.catalog.facade.ProgramFacade;
+import cz.vhromada.result.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author Vladimir Hromada
  */
 @Controller("programController")
-@RequestMapping("/programs")
+@RequestMapping("/catalog/programs")
 @CrossOrigin
 public class ProgramController {
 
@@ -47,142 +48,180 @@ public class ProgramController {
 
     /**
      * Creates new data.
+     *
+     * @return result
      */
     @PostMapping("/new")
-    public void newData() {
-        programFacade.newData();
+    public Result<Void> newData() {
+        return programFacade.newData();
     }
 
     /**
      * Returns list of programs.
      *
-     * @return list of programs
+     * @return result with list of programs
      */
     @GetMapping({ "", "/", "/list" })
-    public List<Program> getPrograms() {
-        return programFacade.getPrograms();
+    public Result<List<Program>> getPrograms() {
+        return programFacade.getAll();
     }
 
     /**
      * Returns program with ID or null if there isn't such program.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>ID is null</li>
+     * </ul>
      *
      * @param id ID
-     * @return program with ID or null if there isn't such program
-     * @throws IllegalArgumentException if ID is null
+     * @return result with program or validation errors
      */
     @GetMapping("/{id}")
-    public Program getProgram(@PathVariable("id") final Integer id) {
-        return programFacade.getProgram(id);
+    public Result<Program> getProgram(@PathVariable("id") final Integer id) {
+        return programFacade.get(id);
     }
 
     /**
      * Adds program. Sets new ID and position.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Program is null</li>
+     * <li>ID isn't null</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>URL to english Wikipedia page about program is null</li>
+     * <li>URL to czech Wikipedia page about program is null</li>
+     * <li>Count of media isn't positive number</li>
+     * <li>Other data is null</li>
+     * <li>Note is null</li>
+     * </ul>
      *
      * @param program program
-     * @throws IllegalArgumentException if program is null
-     *                                  or ID isn't null
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or URL to english Wikipedia page about program is null
-     *                                  or URL to czech Wikipedia page about program is null
-     *                                  or count of media isn't positive number
-     *                                  or other data is null
-     *                                  or note is null
+     * @return result with validation errors
      */
     @PutMapping("/add")
-    public void add(@RequestBody final Program program) {
-        programFacade.add(program);
+    public Result<Void> add(@RequestBody final Program program) {
+        return programFacade.add(program);
     }
 
     /**
      * Updates program.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Program is null</li>
+     * <li>ID is null</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>URL to english Wikipedia page about program is null</li>
+     * <li>URL to czech Wikipedia page about program is null</li>
+     * <li>Count of media isn't positive number</li>
+     * <li>Other data is null</li>
+     * <li>Note is null</li>
+     * <li>Program doesn't exist in data storage</li>
+     * </ul>
      *
      * @param program new value of program
-     * @throws IllegalArgumentException if program is null
-     *                                  or ID is null
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or URL to english Wikipedia page about program is null
-     *                                  or URL to czech Wikipedia page about program is null
-     *                                  or count of media isn't positive number
-     *                                  or other data is null
-     *                                  or note is null
-     *                                  or program doesn't exist in data storage
+     * @return result with validation errors
      */
     @PostMapping("/update")
-    public void update(@RequestBody final Program program) {
-        programFacade.update(program);
+    public Result<Void> update(@RequestBody final Program program) {
+        return programFacade.update(program);
     }
 
     /**
      * Removes program.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Program is null</li>
+     * <li>ID is null</li>
+     * <li>Program doesn't exist in data storage</li>
+     * </ul>
      *
      * @param program program
-     * @throws IllegalArgumentException if program is null
-     *                                  or ID is null
-     *                                  or program doesn't exist in data storage
+     * @return result with validation errors
      */
     @DeleteMapping("/remove")
-    public void remove(@RequestBody final Program program) {
-        programFacade.remove(program);
+    public Result<Void> remove(@RequestBody final Program program) {
+        return programFacade.remove(program);
     }
 
     /**
      * Duplicates program.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Program is null</li>
+     * <li>ID is null</li>
+     * <li>Program doesn't exist in data storage</li>
+     * </ul>
      *
      * @param program program
-     * @throws IllegalArgumentException if program is null
-     *                                  or ID is null
-     *                                  or program doesn't exist in data storage
+     * @return result with validation errors
      */
     @PostMapping("/duplicate")
-    public void duplicate(@RequestBody final Program program) {
-        programFacade.duplicate(program);
+    public Result<Void> duplicate(@RequestBody final Program program) {
+        return programFacade.duplicate(program);
     }
 
     /**
      * Moves program in list one position up.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Program is null</li>
+     * <li>ID is null</li>
+     * <li>Program can't be moved up</li>
+     * <li>Program doesn't exist in data storage</li>
+     * </ul>
      *
      * @param program program
-     * @throws IllegalArgumentException if program is null
-     *                                  or ID is null
-     *                                  or program can't be moved up
-     *                                  or program doesn't exist in data storage
+     * @return result with validation errors
      */
     @PostMapping("/moveUp")
-    public void moveUp(@RequestBody final Program program) {
-        programFacade.moveUp(program);
+    public Result<Void> moveUp(@RequestBody final Program program) {
+        return programFacade.moveUp(program);
     }
 
     /**
      * Moves program in list one position down.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Program is null</li>
+     * <li>ID is null</li>
+     * <li>Program can't be moved down</li>
+     * <li>Program doesn't exist in data storage</li>
+     * </ul>
      *
      * @param program program
-     * @throws IllegalArgumentException if program is null
-     *                                  or ID is null
-     *                                  or program can't be moved down
-     *                                  or program doesn't exist in data storage
+     * @return result with validation errors
      */
     @PostMapping("/moveDown")
-    public void moveDown(@RequestBody final Program program) {
-        programFacade.moveDown(program);
+    public Result<Void> moveDown(@RequestBody final Program program) {
+        return programFacade.moveDown(program);
     }
 
     /**
      * Updates positions.
+     *
+     * @return result
      */
     @PostMapping("/updatePositions")
-    public void updatePositions() {
-        programFacade.updatePositions();
+    public Result<Void> updatePositions() {
+        return programFacade.updatePositions();
     }
 
     /**
      * Returns total count of media.
      *
-     * @return total count of media
+     * @return result with total count of media
      */
     @GetMapping("/totalMedia")
-    public Integer getTotalMediaCount() {
+    public Result<Integer> getTotalMediaCount() {
         return programFacade.getTotalMediaCount();
     }
 

@@ -5,6 +5,7 @@ import java.util.List;
 import cz.vhromada.catalog.entity.Episode;
 import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.facade.EpisodeFacade;
+import cz.vhromada.result.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Vladimir Hromada
  */
 @RestController("episodeController")
-@RequestMapping("/shows/{showId}/seasons/{seasonId}/episodes")
+@RequestMapping("/catalog/shows/{showId}/seasons/{seasonId}/episodes")
 @CrossOrigin
 public class EpisodeController {
 
@@ -48,148 +49,187 @@ public class EpisodeController {
 
     /**
      * Returns episode with ID or null if there isn't such episode.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>ID is null</li>
+     * </ul>
      *
      * @param showId    show ID
      * @param seasonId  season ID
      * @param episodeId episode ID
-     * @return episode with ID or null if there isn't such episode
-     * @throws IllegalArgumentException if episode ID is null
+     * @return result with episode or validation errors
      */
     @GetMapping("/{episodeId}")
-    public Episode getEpisode(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+    public Result<Episode> getEpisode(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
             @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @PathVariable("episodeId") final Integer episodeId) {
-        return episodeFacade.getEpisode(episodeId);
+        return episodeFacade.get(episodeId);
     }
 
     /**
      * Adds episode. Sets new ID and position.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Season is null</li>
+     * <li>Season ID is null</li>
+     * <li>Season doesn't exist in data storage</li>
+     * <li>Episode is null</li>
+     * <li>Episode ID isn't null</li>
+     * <li>Number of episode isn't positive number</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>Length of episode is negative value</li>
+     * <li>Note is null</li>
+     * </ul>
      *
      * @param showId   show ID
      * @param seasonId season ID
      * @param episode  episode
-     * @throws IllegalArgumentException if episode is null
-     *                                  or season ID is null
-     *                                  or episode ID isn't null
-     *                                  or number of episode isn't positive number
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or length of episode is negative value
-     *                                  or note is null
-     *                                  or season doesn't exist in data storage
+     * @return result with validation errors
      */
     @PutMapping("/add")
-    public void add(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+    public Result<Void> add(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
             @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final Episode episode) {
         final Season season = new Season();
         season.setId(seasonId);
 
-        episodeFacade.add(season, episode);
+        return episodeFacade.add(season, episode);
     }
 
     /**
      * Updates episode.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Episode is null</li>
+     * <li>ID is null</li>
+     * <li>Number of episode isn't positive number</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>Length of episode is negative value</li>
+     * <li>Note is null</li>
+     * <li>Season doesn't exist in data storage</li>
+     * </ul>
      *
      * @param showId   show ID
      * @param seasonId season ID
      * @param episode  new value of episode
-     * @throws IllegalArgumentException if episode is null
-     *                                  or episode ID is null
-     *                                  or number of episode isn't positive number
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or length of episode is negative value
-     *                                  or note is null
-     *                                  or episode doesn't exist in data storage
+     * @return result with validation errors
      */
     @PostMapping("/update")
-    public void update(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+    public Result<Void> update(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
             @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final Episode episode) {
-        episodeFacade.update(episode);
+        return episodeFacade.update(episode);
     }
 
     /**
      * Removes episode.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Episode is null</li>
+     * <li>ID is null</li>
+     * <li>Episode doesn't exist in season storage</li>
+     * </ul>
      *
      * @param showId   show ID
      * @param seasonId season ID
      * @param episode  episode
-     * @throws IllegalArgumentException if episode is null
-     *                                  or ID is null
-     *                                  or episode doesn't exist in data storage
+     * @return result with validation errors
      */
     @DeleteMapping("/remove")
-    public void remove(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+    public Result<Void> remove(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
             @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final Episode episode) {
-        episodeFacade.remove(episode);
+        return episodeFacade.remove(episode);
     }
 
     /**
      * Duplicates episode.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Episode is null</li>
+     * <li>ID is null</li>
+     * <li>Episode doesn't exist in season storage</li>
+     * </ul>
      *
      * @param showId   show ID
      * @param seasonId season ID
      * @param episode  episode
-     * @throws IllegalArgumentException if episode is null
-     *                                  or ID is null
-     *                                  or episode doesn't exist in data storage
+     * @return result with validation errors
      */
     @PostMapping("/duplicate")
-    public void duplicate(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+    public Result<Void> duplicate(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
             @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final Episode episode) {
-        episodeFacade.duplicate(episode);
+        return episodeFacade.duplicate(episode);
     }
 
     /**
      * Moves episode in list one position up.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Episode is null</li>
+     * <li>ID is null</li>
+     * <li>Season can't be moved up</li>
+     * <li>Episode doesn't exist in season storage</li>
+     * </ul>
      *
      * @param showId   show ID
      * @param seasonId season ID
      * @param episode  episode
-     * @throws IllegalArgumentException if episode is null
-     *                                  or ID is null
-     *                                  or episode can't be moved up
-     *                                  or episode doesn't exist in data storage
+     * @return result with validation errors
      */
     @PostMapping("/moveUp")
-    public void moveUp(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+    public Result<Void> moveUp(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
             @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final Episode episode) {
-        episodeFacade.moveUp(episode);
+        return episodeFacade.moveUp(episode);
     }
 
     /**
      * Moves episode in list one position down.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Episode is null</li>
+     * <li>ID is null</li>
+     * <li>Season can't be moved down</li>
+     * <li>Episode doesn't exist in season storage</li>
+     * </ul>
      *
      * @param showId   show ID
      * @param seasonId season ID
      * @param episode  episode
-     * @throws IllegalArgumentException if episode is null
-     *                                  or ID is null
-     *                                  or episode can't be moved down
-     *                                  or episode doesn't exist in data storage
+     * @return result with validation errors
      */
     @PostMapping("/moveDown")
-    public void moveDown(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+    public Result<Void> moveDown(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
             @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final Episode episode) {
-        episodeFacade.moveDown(episode);
+        return episodeFacade.moveDown(episode);
     }
 
     /**
      * Returns list of episodes for specified season.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Season is null</li>
+     * <li>ID is null</li>
+     * <li>Season doesn't exist in data storage</li>
+     * </ul>
      *
      * @param showId   show ID
      * @param seasonId season ID
-     * @return list of episodes for specified season
-     * @throws IllegalArgumentException if season is null
-     *                                  or season ID is null
-     *                                  or season doesn't exist in data storage
+     * @return result with list of episodes or validation error
      */
     @GetMapping({ "", "/", "/list" })
-    public List<Episode> findEpisodesBySeason(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+    public Result<List<Episode>> findEpisodesBySeason(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
             @PathVariable("seasonId") final Integer seasonId) {
         final Season season = new Season();
         season.setId(seasonId);
 
-        return episodeFacade.findEpisodesBySeason(season);
+        return episodeFacade.find(season);
     }
 
 }

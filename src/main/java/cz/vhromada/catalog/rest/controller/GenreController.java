@@ -4,9 +4,7 @@ import java.util.List;
 
 import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.facade.GenreFacade;
-import cz.vhromada.catalog.rest.entity.Result;
-import cz.vhromada.catalog.rest.entity.Status;
-import cz.vhromada.catalog.rest.validator.GenreValidator;
+import cz.vhromada.result.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -26,29 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Vladimir Hromada
  */
 @RestController("genreController")
-@RequestMapping("/genres")
+@RequestMapping("/catalog/genres")
 @CrossOrigin
 public class GenreController {
-
-    /**
-     * Key for not existing genre
-     */
-    private static final String NOT_EXISTING_GENRE_KEY = "GENRE_NOT_EXISTS";
-
-    /**
-     * Message for not existing genre
-     */
-    private static final String NOT_EXISTING_GENRE_MESSAGE = "Genre doesn't exist.";
-
-    /**
-     * Key for not movable genre
-     */
-    private static final String NOT_MOVABLE_GENRE_KEY = "GENRE_NOT_MOVABLE";
-
-    /**
-     * Message for not movable genre
-     */
-    private static final String NOT_MOVABLE_GENRE_MESSAGE = "ID isn't valid - genre can't be moved.";
 
     /**
      * Facade for genres
@@ -56,26 +34,16 @@ public class GenreController {
     private GenreFacade genreFacade;
 
     /**
-     * Validator for genre
-     */
-    private GenreValidator genreValidator;
-
-    /**
      * Creates a new instance of GenreController.
      *
-     * @param genreFacade    facade for genres
-     * @param genreValidator validator for genre
+     * @param genreFacade facade for genres
      * @throws IllegalArgumentException if facade for genres is null
-     *                                  or validator for genre is null
      */
     @Autowired
-    public GenreController(final GenreFacade genreFacade,
-            final GenreValidator genreValidator) {
+    public GenreController(final GenreFacade genreFacade) {
         Assert.notNull(genreFacade, "Facade for genres mustn't be null.");
-        Assert.notNull(genreValidator, "Validator for genre mustn't be null.");
 
         this.genreFacade = genreFacade;
-        this.genreValidator = genreValidator;
     }
 
     /**
@@ -85,9 +53,7 @@ public class GenreController {
      */
     @PostMapping("/new")
     public Result<Void> newData() {
-        genreFacade.newData();
-
-        return new Result<>();
+        return genreFacade.newData();
     }
 
     /**
@@ -97,154 +63,136 @@ public class GenreController {
      */
     @GetMapping({ "", "/", "/list" })
     public Result<List<Genre>> getGenres() {
-        return Result.of(genreFacade.getGenres());
+        return genreFacade.getAll();
     }
 
     /**
      * Returns genre with ID or null if there isn't such genre.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>ID is null</li>
+     * </ul>
      *
      * @param id ID
-     * @return result with genre with ID or null if there isn't such genre
+     * @return result with genre or validation errors
      */
     @GetMapping("/{id}")
     public Result<Genre> getGenre(@PathVariable("id") final Integer id) {
-        if (id == null) {
-            return Result.of("ID_NULL", "ID mustn't be null");
-        }
-
-        return Result.of(genreFacade.getGenre(id));
+        return genreFacade.get(id);
     }
 
     /**
      * Adds genre. Sets new ID and position.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Genre is null</li>
+     * <li>ID isn't null</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * </ul>
      *
      * @param genre genre
-     * @return result
+     * @return result with validation errors
      */
     @PutMapping("/add")
     public Result<Void> add(@RequestBody final Genre genre) {
-        final Result<Void> result = genreValidator.validateNewGenre(genre);
-
-        if (Status.OK == result.getStatus()) {
-            genreFacade.add(genre);
-        }
-
-        return result;
+        return genreFacade.add(genre);
     }
 
     /**
      * Updates genre.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Genre is null</li>
+     * <li>ID is null</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>Genre doesn't exist in data storage</li>
+     * </ul>
      *
      * @param genre new value of genre
-     * @return result
+     * @return result with validation errors
      */
     @PostMapping("/update")
     public Result<Void> update(@RequestBody final Genre genre) {
-        final Result<Void> result = genreValidator.validateExistingGenre(genre);
-
-        if (Status.OK == result.getStatus()) {
-            if (existsGenres(genre)) {
-                genreFacade.update(genre);
-            } else {
-                result.addErrorMessage(NOT_EXISTING_GENRE_KEY, NOT_EXISTING_GENRE_MESSAGE);
-            }
-        }
-
-        return result;
+        return genreFacade.update(genre);
     }
 
     /**
      * Removes genre.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Genre is null</li>
+     * <li>ID is null</li>
+     * <li>Genre doesn't exist in data storage</li>
+     * </ul>
      *
      * @param genre genre
-     * @return result
+     * @return result with validation errors
      */
     @DeleteMapping("/remove")
     public Result<Void> remove(@RequestBody final Genre genre) {
-        final Result<Void> result = genreValidator.validateGenreWithId(genre);
-
-        if (Status.OK == result.getStatus()) {
-            if (existsGenres(genre)) {
-                genreFacade.remove(genre);
-            } else {
-                result.addErrorMessage(NOT_EXISTING_GENRE_KEY, NOT_EXISTING_GENRE_MESSAGE);
-            }
-        }
-
-        return result;
+        return genreFacade.remove(genre);
     }
 
     /**
      * Duplicates genre.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Genre is null</li>
+     * <li>ID is null</li>
+     * <li>Genre doesn't exist in data storage</li>
+     * </ul>
      *
      * @param genre genre
-     * @return result
+     * @return result with validation errors
      */
     @PostMapping("/duplicate")
     public Result<Void> duplicate(@RequestBody final Genre genre) {
-        final Result<Void> result = genreValidator.validateGenreWithId(genre);
-
-        if (Status.OK == result.getStatus()) {
-            if (existsGenres(genre)) {
-                genreFacade.duplicate(genre);
-            } else {
-                result.addErrorMessage(NOT_EXISTING_GENRE_KEY, NOT_EXISTING_GENRE_MESSAGE);
-            }
-        }
-
-        return result;
+        return genreFacade.duplicate(genre);
     }
 
     /**
      * Moves genre in list one position up.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Genre is null</li>
+     * <li>ID is null</li>
+     * <li>Genre can't be moved up</li>
+     * <li>Genre doesn't exist in data storage</li>
+     * </ul>
      *
      * @param genre genre
-     * @return result
+     * @return result with validation errors
      */
     @PostMapping("/moveUp")
     public Result<Void> moveUp(@RequestBody final Genre genre) {
-        final Result<Void> result = genreValidator.validateGenreWithId(genre);
-
-        if (Status.OK == result.getStatus()) {
-            if (existsGenres(genre)) {
-                final List<Genre> genres = genreFacade.getGenres();
-                if (genres.indexOf(genre) <= 0) {
-                    result.addErrorMessage(NOT_MOVABLE_GENRE_KEY, NOT_MOVABLE_GENRE_MESSAGE);
-                } else {
-                    genreFacade.moveUp(genre);
-                }
-            } else {
-                result.addErrorMessage(NOT_EXISTING_GENRE_KEY, NOT_EXISTING_GENRE_MESSAGE);
-            }
-        }
-
-        return result;
+        return genreFacade.moveUp(genre);
     }
 
     /**
      * Moves genre in list one position down.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Genre is null</li>
+     * <li>ID is null</li>
+     * <li>Genre can't be moved down</li>
+     * <li>Genre doesn't exist in data storage</li>
+     * </ul>
      *
      * @param genre genre
-     * @return result
+     * @return result with validation errors
      */
     @PostMapping("/moveDown")
     public Result<Void> moveDown(@RequestBody final Genre genre) {
-        final Result<Void> result = genreValidator.validateGenreWithId(genre);
-
-        if (Status.OK == result.getStatus()) {
-            if (existsGenres(genre)) {
-                final List<Genre> genres = genreFacade.getGenres();
-                if (genres.indexOf(genre) >= genres.size() - 1) {
-                    result.addErrorMessage(NOT_MOVABLE_GENRE_KEY, NOT_MOVABLE_GENRE_MESSAGE);
-                } else {
-                    genreFacade.moveDown(genre);
-                }
-            } else {
-                result.addErrorMessage(NOT_EXISTING_GENRE_KEY, NOT_EXISTING_GENRE_MESSAGE);
-            }
-        }
-
-        return result;
+        return genreFacade.moveDown(genre);
     }
 
     /**
@@ -254,19 +202,7 @@ public class GenreController {
      */
     @PostMapping("/updatePositions")
     public Result<Void> updatePositions() {
-        genreFacade.updatePositions();
-
-        return new Result<>();
-    }
-
-    /**
-     * Returns true if genre exists.
-     *
-     * @param genre genre
-     * @return true if genre exists
-     */
-    private boolean existsGenres(final Genre genre) {
-        return genreFacade.getGenre(genre.getId()) != null;
+        return genreFacade.updatePositions();
     }
 
 }

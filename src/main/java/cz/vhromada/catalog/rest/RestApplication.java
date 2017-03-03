@@ -38,7 +38,7 @@ public class RestApplication {
                 .groupName("catalog")
                 .apiInfo(info)
                 .select()
-                .paths(PathSelectors.any())
+                .paths(PathSelectors.regex("/catalog.*"))
                 .build();
     }
 

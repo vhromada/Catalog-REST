@@ -5,6 +5,7 @@ import java.util.List;
 import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.entity.Song;
 import cz.vhromada.catalog.facade.SongFacade;
+import cz.vhromada.result.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author Vladimir Hromada
  */
 @Controller("songController")
-@RequestMapping("/music/{musicId}/songs")
+@RequestMapping("/catalog/music/{musicId}/songs")
 @CrossOrigin
 public class SongController {
 
@@ -48,131 +49,169 @@ public class SongController {
 
     /**
      * Returns song with ID or null if there isn't such song.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>ID is null</li>
+     * </ul>
      *
      * @param musicId music ID
      * @param songId  song ID
-     * @return song with ID or null if there isn't such song
-     * @throws IllegalArgumentException if ID is null
+     * @return result with song or validation errors
      */
     @GetMapping("/{songId}")
-    public Song getSong(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId,
-            @PathVariable("songId") final Integer songId) {
-        return songFacade.getSong(songId);
+    public Result<Song> getSong(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @PathVariable("songId") final Integer songId) {
+        return songFacade.get(songId);
     }
 
     /**
      * Adds song. Sets new ID and position.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Music is null</li>
+     * <li>Music ID is null</li>
+     * <li>Music doesn't exist in data storage</li>
+     * <li>Song is null</li>
+     * <li>Song ID isn't null</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>Length of song is negative value</li>
+     * <li>Note is null</li>
+     * </ul>
      *
      * @param musicId music ID
      * @param song    song
-     * @throws IllegalArgumentException if song is null
-     *                                  or music ID is null
-     *                                  or song ID isn't null
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or length of song is negative value
-     *                                  or note is null
-     *                                  or music doesn't exist in data storage
+     * @return result with validation errors
      */
     @PutMapping("/add")
-    public void add(@PathVariable("musicId") final Integer musicId, @RequestBody final Song song) {
+    public Result<Void> add(@PathVariable("musicId") final Integer musicId, @RequestBody final Song song) {
         final Music music = new Music();
         music.setId(musicId);
 
-        songFacade.add(music, song);
+        return songFacade.add(music, song);
     }
 
     /**
      * Updates song.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Song is null</li>
+     * <li>ID isn't null</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>Length of song is negative value</li>
+     * <li>Note is null</li>
+     * <li>Song doesn't exist in data storage</li>
+     * </ul>
      *
      * @param musicId music ID
      * @param song    new value of song
-     * @throws IllegalArgumentException if song is null
-     *                                  or song ID is null
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or length of song is negative value
-     *                                  or note is null
-     *                                  or song doesn't exist in data storage
+     * @return result with validation errors
      */
     @PostMapping("/update")
-    public void update(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
-        songFacade.update(song);
+    public Result<Void> update(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
+        return songFacade.update(song);
     }
 
     /**
      * Removes song.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Song is null</li>
+     * <li>ID is null</li>
+     * <li>Song doesn't exist in song storage</li>
+     * </ul>
      *
      * @param musicId music ID
      * @param song    song
-     * @throws IllegalArgumentException if song is null
-     *                                  or ID is null
-     *                                  or song doesn't exist in data storage
+     * @return result with validation errors
      */
     @DeleteMapping("/remove")
-    public void remove(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
-        songFacade.remove(song);
+    public Result<Void> remove(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
+        return songFacade.remove(song);
     }
 
     /**
      * Duplicates song.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Song is null</li>
+     * <li>ID is null</li>
+     * <li>Song doesn't exist in song storage</li>
+     * </ul>
      *
      * @param musicId music ID
      * @param song    song
-     * @throws IllegalArgumentException if song is null
-     *                                  or ID is null
-     *                                  or song doesn't exist in data storage
+     * @return result with validation errors
      */
-    @PostMapping("/duplicate")
-    public void duplicate(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
-        songFacade.duplicate(song);
+    @RequestMapping("/duplicate")
+    public Result<Void> duplicate(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
+        return songFacade.duplicate(song);
     }
 
     /**
      * Moves song in list one position up.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Song is null</li>
+     * <li>ID is null</li>
+     * <li>Song can't be moved up</li>
+     * <li>Song doesn't exist in song storage</li>
+     * </ul>
      *
      * @param musicId music ID
      * @param song    song
-     * @throws IllegalArgumentException if song is null
-     *                                  or ID is null
-     *                                  or song can't be moved up
-     *                                  or song doesn't exist in data storage
+     * @return result with validation errors
      */
-    @PostMapping("/moveUp")
-    public void moveUp(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
-        songFacade.moveUp(song);
+    @RequestMapping("/moveUp")
+    public Result<Void> moveUp(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
+        return songFacade.moveUp(song);
     }
 
     /**
      * Moves song in list one position down.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Song is null</li>
+     * <li>ID is null</li>
+     * <li>Song can't be moved down</li>
+     * <li>Song doesn't exist in song storage</li>
+     * </ul>
      *
      * @param musicId music ID
      * @param song    song
-     * @throws IllegalArgumentException if song is null
-     *                                  or ID is null
-     *                                  or song can't be moved down
-     *                                  or song doesn't exist in data storage
+     * @return result with validation errors
      */
-    @PostMapping("/moveDown")
-    public void moveDown(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
-        songFacade.moveDown(song);
+    @RequestMapping("/moveDown")
+    public Result<Void> moveDown(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
+        return songFacade.moveDown(song);
     }
 
     /**
      * Returns list of songs for specified music.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Music is null</li>
+     * <li>ID is null</li>
+     * <li>Music doesn't exist in data storage</li>
+     * </ul>
      *
      * @param musicId music ID
-     * @return list of songs for specified music
-     * @throws IllegalArgumentException if music is null
-     *                                  or ID is null
-     *                                  or music doesn't exist in data storage
+     * @return result with list of songs or validation error
      */
     @GetMapping({ "", "/", "/list" })
-    public List<Song> findSongsByMusic(@PathVariable("musicId") final Integer musicId) {
+    public Result<List<Song>> findSongsByMusic(@PathVariable("musicId") final Integer musicId) {
         final Music music = new Music();
         music.setId(musicId);
 
-        return songFacade.findSongsByMusic(music);
+        return songFacade.find(music);
     }
 
 }
