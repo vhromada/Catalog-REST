@@ -24,6 +24,7 @@ public class ExceptionProcessAspect {
      * @throws Throwable if calling method fails
      */
     @Around("controllerPointcut()")
+    //CHECKSTYLE.OFF: IllegalThrows
     public Object process(final ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         try {
             return proceedingJoinPoint.proceed();
@@ -33,6 +34,7 @@ public class ExceptionProcessAspect {
             return new ResponseEntity<>(exception.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    //CHECKSTYLE.OFF: IllegalThrows
 
     /**
      * Pointcut for controller layer

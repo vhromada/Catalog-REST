@@ -23,9 +23,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Import(CatalogConfiguration.class)
 public class RestApplication {
 
+    //CHECKSTYLE.OFF: UncommentedMain
     public static void main(final String[] args) {
         SpringApplication.run(RestApplication.class, args);
     }
+    //CHECKSTYLE.OFF: UncommentedMain
 
     @Bean
     public Docket applicationApi() {
