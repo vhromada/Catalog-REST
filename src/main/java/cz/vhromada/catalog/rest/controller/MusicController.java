@@ -236,7 +236,7 @@ public class MusicController {
     public Result<Integer> getTotalLength() {
         final Result<Time> lengthResult = musicFacade.getTotalLength();
 
-        if (Status.OK.equals(lengthResult.getStatus())) {
+        if (Status.OK == lengthResult.getStatus()) {
             return Result.of(lengthResult.getData().getLength());
         }
 

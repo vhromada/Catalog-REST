@@ -268,7 +268,7 @@ public class MovieController {
     public Result<Integer> getTotalLength() {
         final Result<Time> lengthResult = movieFacade.getTotalLength();
 
-        if (Status.OK.equals(lengthResult.getStatus())) {
+        if (Status.OK == lengthResult.getStatus()) {
             return Result.of(lengthResult.getData().getLength());
         }
 

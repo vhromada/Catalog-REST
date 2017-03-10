@@ -24,6 +24,7 @@ public class ExceptionProcessAspect {
      * @throws Throwable if calling method fails
      */
     @Around("controllerPointcut()")
+    @SuppressWarnings("MethodMayBeStatic")
     //CHECKSTYLE.OFF: IllegalThrows
     public Object process(final ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         try {
