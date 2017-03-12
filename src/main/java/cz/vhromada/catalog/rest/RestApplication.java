@@ -6,6 +6,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -21,7 +23,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableSwagger2
 @Import(CatalogConfiguration.class)
-public class RestApplication {
+public class RestApplication extends WebMvcConfigurerAdapter {
 
     /**
      * Main method.
@@ -33,6 +35,11 @@ public class RestApplication {
         SpringApplication.run(RestApplication.class, args);
     }
     //CHECKSTYLE.OFF: UncommentedMain
+
+    @Override
+    public void addCorsMappings(final CorsRegistry registry) {
+        registry.addMapping("/catalog/**");
+    }
 
     @Bean
     public Docket applicationApi() {

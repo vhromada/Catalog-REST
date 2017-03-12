@@ -3,20 +3,18 @@ package cz.vhromada.catalog.rest.controller;
 import cz.vhromada.catalog.common.Time;
 import cz.vhromada.result.Result;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * A class represents controller for time.
  *
  * @author Vladimir Hromada
  */
-@Controller("timeController")
+@RestController("timeController")
 @RequestMapping("/catalog/time")
-@CrossOrigin
 public class TimeController {
 
     /**
