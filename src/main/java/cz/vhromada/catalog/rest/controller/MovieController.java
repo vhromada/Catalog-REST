@@ -263,6 +263,7 @@ public class MovieController {
      * @return result with total length of all movies
      */
     @GetMapping("/totalLength")
+    @SuppressWarnings("Duplicates")
     public Result<Integer> getTotalLength() {
         final Result<Time> lengthResult = movieFacade.getTotalLength();
 

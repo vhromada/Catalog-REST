@@ -231,6 +231,7 @@ public class MusicController {
      * @return result with total length of all music
      */
     @GetMapping("/totalLength")
+    @SuppressWarnings("Duplicates")
     public Result<Integer> getTotalLength() {
         final Result<Time> lengthResult = musicFacade.getTotalLength();
 

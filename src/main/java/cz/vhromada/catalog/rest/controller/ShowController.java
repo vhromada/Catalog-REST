@@ -239,6 +239,7 @@ public class ShowController {
      * @return result with total length of all shows
      */
     @GetMapping("/totalLength")
+    @SuppressWarnings("Duplicates")
     public Result<Integer> getTotalLength() {
         final Result<Time> lengthResult = showFacade.getTotalLength();
 
