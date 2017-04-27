@@ -3,6 +3,7 @@ package cz.vhromada.catalog.rest.controller;
 import cz.vhromada.catalog.common.Time;
 import cz.vhromada.result.Result;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController("timeController")
 @RequestMapping("/catalog/time")
+@CrossOrigin
 public class TimeController {
 
     /**
