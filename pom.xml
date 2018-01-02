@@ -55,10 +55,12 @@
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
@@ -67,6 +69,7 @@
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
