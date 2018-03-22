@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import cz.vhromada.catalog.entity.Picture;
 import cz.vhromada.catalog.facade.PictureFacade;
+import cz.vhromada.catalog.rest.exception.CatalogErrorException;
 import cz.vhromada.result.Result;
 import cz.vhromada.result.Status;
 
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -34,7 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController("pictureController")
 @RequestMapping("/catalog/pictures")
 @CrossOrigin
-public class PictureController {
+public class PictureController extends AbstractCatalogController {
 
     /**
      * Facade for pictures
@@ -60,8 +62,8 @@ public class PictureController {
      * @return result
      */
     @PostMapping("/new")
-    public Result<Void> newData() {
-        return pictureFacade.newData();
+    public ResponseEntity<Result<Void>> newData() {
+        return processResult(pictureFacade.newData());
     }
 
     /**
@@ -70,7 +72,7 @@ public class PictureController {
      * @return result with list of pictures
      */
     @GetMapping({ "", "/", "/list" })
-    public Result<List<Integer>> getPictures() {
+    public ResponseEntity<Result<List<Integer>>> getPictures() {
         final Result<List<Picture>> pictures = pictureFacade.getAll();
 
         final Result<List<Integer>> result = new Result<>();
@@ -79,38 +81,31 @@ public class PictureController {
             result.setData(pictures.getData().stream().map(Picture::getId).collect(Collectors.toList()));
         }
 
-        return result;
+        return processResult(result);
     }
 
     /**
      * Returns picture with ID.
-     * <br>
-     * Returned HTTP status:
-     * <ul>
-     * <li>200 - found</li>
-     * <li>404 - not found</li>
-     * <li>422 - ID is null</li>
-     * </ul>
      *
      * @param id ID
      * @return picture
      */
     @GetMapping("/{id}")
     public ResponseEntity<Resource> getPicture(@PathVariable("id") final Integer id) {
-        final Result<Picture> picture = pictureFacade.get(id);
+        final Result<Picture> result = pictureFacade.get(id);
 
-        if (Status.OK == picture.getStatus()) {
-            if (picture.getData() == null) {
-                return ResponseEntity.notFound().build();
+        if (Status.OK == result.getStatus()) {
+            if (result.getData() == null) {
+                throw new CatalogErrorException(HttpStatus.NOT_FOUND, Result.error("PICTURE_NOT_EXIST", "Picture doesn't exist."));
             }
 
             return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"picture.jpg\"")
                 .header(HttpHeaders.CONTENT_TYPE, "image/jpg")
-                .body(new ByteArrayResource(picture.getData().getContent()));
+                .body(new ByteArrayResource(result.getData().getContent()));
         }
 
-        return ResponseEntity.unprocessableEntity().build();
+        throw new CatalogErrorException(HttpStatus.UNPROCESSABLE_ENTITY, result);
     }
 
     /**
@@ -126,20 +121,20 @@ public class PictureController {
      * @throws IOException if getting picture content fails
      */
     @PutMapping("/add")
-    public Result<Void> add(@RequestParam("file") final MultipartFile file) throws IOException {
+    public ResponseEntity<Result<Void>> add(@RequestParam("file") final MultipartFile file) throws IOException {
         final Result<Void> result = new Result<>();
         if (file == null) {
-            return Result.error("FILE_NULL", "File mustn't be null.");
+            return processErrorResult(Result.error("FILE_NULL", "File mustn't be null."));
         }
         if (file.isEmpty()) {
-            return Result.error("FILE_EMPTY", "File mustn't be empty.");
+            return processErrorResult(Result.error("FILE_EMPTY", "File mustn't be empty."));
         }
 
         final Picture picture = new Picture();
         picture.setContent(file.getBytes());
         result.addEvents(pictureFacade.add(picture).getEvents());
 
-        return result;
+        return processResult(result, HttpStatus.CREATED);
     }
 
     /**
@@ -155,71 +150,8 @@ public class PictureController {
      * @return result with validation errors
      */
     @DeleteMapping("/remove/{id}")
-    public Result<Void> remove(@PathVariable("id") final Integer id) {
-        return pictureFacade.remove(newPicture(id));
-    }
-
-    /**
-     * Duplicates picture.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>ID is null</li>
-     * <li>Picture doesn't exist in data storage</li>
-     * </ul>
-     *
-     * @param id ID
-     * @return result with validation errors
-     */
-    @PostMapping("/duplicate/{id}")
-    public Result<Void> duplicate(@PathVariable("id") final Integer id) {
-        return pictureFacade.duplicate(newPicture(id));
-    }
-
-    /**
-     * Moves picture in list one position up.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>ID is null</li>
-     * <li>Picture can't be moved up</li>
-     * <li>Picture doesn't exist in data storage</li>
-     * </ul>
-     *
-     * @param id ID
-     * @return result with validation errors
-     */
-    @PostMapping("/moveUp/{id}")
-    public Result<Void> moveUp(@PathVariable("id") final Integer id) {
-        return pictureFacade.moveUp(newPicture(id));
-    }
-
-    /**
-     * Moves picture in list one position down.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>ID is null</li>
-     * <li>Picture can't be moved down</li>
-     * <li>Picture doesn't exist in data storage</li>
-     * </ul>
-     *
-     * @param id ID
-     * @return result with validation errors
-     */
-    @PostMapping("/moveDown/{id}")
-    public Result<Void> moveDown(@PathVariable("id") final Integer id) {
-        return pictureFacade.moveDown(newPicture(id));
-    }
-
-    /**
-     * Updates positions.
-     *
-     * @return result
-     */
-    @PostMapping("/updatePositions")
-    public Result<Void> updatePositions() {
-        return pictureFacade.updatePositions();
+    public ResponseEntity<Result<Void>> remove(@PathVariable("id") final Integer id) {
+        return processResult(pictureFacade.remove(newPicture(id)));
     }
 
     /**

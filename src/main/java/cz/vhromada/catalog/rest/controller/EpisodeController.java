@@ -8,8 +8,9 @@ import cz.vhromada.catalog.facade.EpisodeFacade;
 import cz.vhromada.result.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,8 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController("episodeController")
 @RequestMapping("/catalog/shows/{showId}/seasons/{seasonId}/episodes")
-@CrossOrigin
-public class EpisodeController {
+public class EpisodeController extends AbstractCatalogController {
 
     /**
      * Facade for episodes
@@ -61,9 +61,9 @@ public class EpisodeController {
      * @return result with episode or validation errors
      */
     @GetMapping("/{episodeId}")
-    public Result<Episode> getEpisode(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
-            @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @PathVariable("episodeId") final Integer episodeId) {
-        return episodeFacade.get(episodeId);
+    public ResponseEntity<Result<Episode>> getEpisode(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+        @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @PathVariable("episodeId") final Integer episodeId) {
+        return processResult(episodeFacade.get(episodeId));
     }
 
     /**
@@ -89,12 +89,12 @@ public class EpisodeController {
      * @return result with validation errors
      */
     @PutMapping("/add")
-    public Result<Void> add(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
-            @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final Episode episode) {
+    public ResponseEntity<Result<Void>> add(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+        @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final Episode episode) {
         final Season season = new Season();
         season.setId(seasonId);
 
-        return episodeFacade.add(season, episode);
+        return processResult(episodeFacade.add(season, episode), HttpStatus.CREATED);
     }
 
     /**
@@ -118,9 +118,9 @@ public class EpisodeController {
      * @return result with validation errors
      */
     @PostMapping("/update")
-    public Result<Void> update(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
-            @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final Episode episode) {
-        return episodeFacade.update(episode);
+    public ResponseEntity<Result<Void>> update(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+        @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final Episode episode) {
+        return processResult(episodeFacade.update(episode));
     }
 
     /**
@@ -139,9 +139,9 @@ public class EpisodeController {
      * @return result with validation errors
      */
     @DeleteMapping("/remove")
-    public Result<Void> remove(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
-            @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final Episode episode) {
-        return episodeFacade.remove(episode);
+    public ResponseEntity<Result<Void>> remove(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+        @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final Episode episode) {
+        return processResult(episodeFacade.remove(episode));
     }
 
     /**
@@ -160,9 +160,9 @@ public class EpisodeController {
      * @return result with validation errors
      */
     @PostMapping("/duplicate")
-    public Result<Void> duplicate(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
-            @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final Episode episode) {
-        return episodeFacade.duplicate(episode);
+    public ResponseEntity<Result<Void>> duplicate(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+        @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final Episode episode) {
+        return processResult(episodeFacade.duplicate(episode), HttpStatus.CREATED);
     }
 
     /**
@@ -182,9 +182,9 @@ public class EpisodeController {
      * @return result with validation errors
      */
     @PostMapping("/moveUp")
-    public Result<Void> moveUp(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
-            @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final Episode episode) {
-        return episodeFacade.moveUp(episode);
+    public ResponseEntity<Result<Void>> moveUp(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+        @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final Episode episode) {
+        return processResult(episodeFacade.moveUp(episode));
     }
 
     /**
@@ -204,9 +204,9 @@ public class EpisodeController {
      * @return result with validation errors
      */
     @PostMapping("/moveDown")
-    public Result<Void> moveDown(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
-            @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final Episode episode) {
-        return episodeFacade.moveDown(episode);
+    public ResponseEntity<Result<Void>> moveDown(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+        @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final Episode episode) {
+        return processResult(episodeFacade.moveDown(episode));
     }
 
     /**
@@ -224,12 +224,12 @@ public class EpisodeController {
      * @return result with list of episodes or validation error
      */
     @GetMapping({ "", "/", "/list" })
-    public Result<List<Episode>> findEpisodesBySeason(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
-            @PathVariable("seasonId") final Integer seasonId) {
+    public ResponseEntity<Result<List<Episode>>> findEpisodesBySeason(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+        @PathVariable("seasonId") final Integer seasonId) {
         final Season season = new Season();
         season.setId(seasonId);
 
-        return episodeFacade.find(season);
+        return processResult(episodeFacade.find(season));
     }
 
 }

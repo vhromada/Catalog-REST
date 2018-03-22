@@ -7,8 +7,9 @@ import cz.vhromada.catalog.facade.GameFacade;
 import cz.vhromada.result.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,8 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController("gameController")
 @RequestMapping("/catalog/games")
-@CrossOrigin
-public class GameController {
+public class GameController extends AbstractCatalogController {
 
     /**
      * Facade for games
@@ -52,8 +52,8 @@ public class GameController {
      * @return result
      */
     @PostMapping("/new")
-    public Result<Void> newData() {
-        return gameFacade.newData();
+    public ResponseEntity<Result<Void>> newData() {
+        return processResult(gameFacade.newData());
     }
 
     /**
@@ -62,8 +62,8 @@ public class GameController {
      * @return result with list of games
      */
     @GetMapping({ "", "/", "/list" })
-    public Result<List<Game>> getGames() {
-        return gameFacade.getAll();
+    public ResponseEntity<Result<List<Game>>> getGames() {
+        return processResult(gameFacade.getAll());
     }
 
     /**
@@ -78,8 +78,8 @@ public class GameController {
      * @return result with game or validation errors
      */
     @GetMapping("/{id}")
-    public Result<Game> getGame(@PathVariable("id") final Integer id) {
-        return gameFacade.get(id);
+    public ResponseEntity<Result<Game>> getGame(@PathVariable("id") final Integer id) {
+        return processResult(gameFacade.get(id));
     }
 
     /**
@@ -102,8 +102,8 @@ public class GameController {
      * @return result with validation errors
      */
     @PutMapping("/add")
-    public Result<Void> add(@RequestBody final Game game) {
-        return gameFacade.add(game);
+    public ResponseEntity<Result<Void>> add(@RequestBody final Game game) {
+        return processResult(gameFacade.add(game), HttpStatus.CREATED);
     }
 
     /**
@@ -127,8 +127,8 @@ public class GameController {
      * @return result with validation errors
      */
     @PostMapping("/update")
-    public Result<Void> update(@RequestBody final Game game) {
-        return gameFacade.update(game);
+    public ResponseEntity<Result<Void>> update(@RequestBody final Game game) {
+        return processResult(gameFacade.update(game));
     }
 
     /**
@@ -145,8 +145,8 @@ public class GameController {
      * @return result with validation errors
      */
     @DeleteMapping("/remove")
-    public Result<Void> remove(@RequestBody final Game game) {
-        return gameFacade.remove(game);
+    public ResponseEntity<Result<Void>> remove(@RequestBody final Game game) {
+        return processResult(gameFacade.remove(game));
     }
 
     /**
@@ -163,8 +163,8 @@ public class GameController {
      * @return result with validation errors
      */
     @PostMapping("/duplicate")
-    public Result<Void> duplicate(@RequestBody final Game game) {
-        return gameFacade.duplicate(game);
+    public ResponseEntity<Result<Void>> duplicate(@RequestBody final Game game) {
+        return processResult(gameFacade.duplicate(game), HttpStatus.CREATED);
     }
 
     /**
@@ -182,8 +182,8 @@ public class GameController {
      * @return result with validation errors
      */
     @PostMapping("/moveUp")
-    public Result<Void> moveUp(@RequestBody final Game game) {
-        return gameFacade.moveUp(game);
+    public ResponseEntity<Result<Void>> moveUp(@RequestBody final Game game) {
+        return processResult(gameFacade.moveUp(game));
     }
 
     /**
@@ -201,8 +201,8 @@ public class GameController {
      * @return result with validation errors
      */
     @PostMapping("/moveDown")
-    public Result<Void> moveDown(@RequestBody final Game game) {
-        return gameFacade.moveDown(game);
+    public ResponseEntity<Result<Void>> moveDown(@RequestBody final Game game) {
+        return processResult(gameFacade.moveDown(game));
     }
 
     /**
@@ -211,8 +211,8 @@ public class GameController {
      * @return result
      */
     @PostMapping("/updatePositions")
-    public Result<Void> updatePositions() {
-        return gameFacade.updatePositions();
+    public ResponseEntity<Result<Void>> updatePositions() {
+        return processResult(gameFacade.updatePositions());
     }
 
     /**
@@ -221,8 +221,8 @@ public class GameController {
      * @return result with total count of media
      */
     @GetMapping("/totalMedia")
-    public Result<Integer> getTotalMediaCount() {
-        return gameFacade.getTotalMediaCount();
+    public ResponseEntity<Result<Integer>> getTotalMediaCount() {
+        return processResult(gameFacade.getTotalMediaCount());
     }
 
 }

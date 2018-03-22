@@ -8,8 +8,9 @@ import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.result.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,8 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController("seasonController")
 @RequestMapping("/catalog/shows/{showId}/seasons")
-@CrossOrigin
-public class SeasonController {
+public class SeasonController extends AbstractCatalogController {
 
     /**
      * Facade for seasons
@@ -60,9 +60,9 @@ public class SeasonController {
      * @return result with season or validation errors
      */
     @GetMapping("/{seasonId}")
-    public Result<Season> getSeason(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
-            @PathVariable("seasonId") final Integer seasonId) {
-        return seasonFacade.get(seasonId);
+    public ResponseEntity<Result<Season>> getSeason(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
+        @PathVariable("seasonId") final Integer seasonId) {
+        return processResult(seasonFacade.get(seasonId));
     }
 
     /**
@@ -90,11 +90,11 @@ public class SeasonController {
      * @return result with validation errors
      */
     @PutMapping("/add")
-    public Result<Void> add(@PathVariable("showId") final Integer showId, @RequestBody final Season season) {
+    public ResponseEntity<Result<Void>> add(@PathVariable("showId") final Integer showId, @RequestBody final Season season) {
         final Show show = new Show();
         show.setId(showId);
 
-        return seasonFacade.add(show, season);
+        return processResult(seasonFacade.add(show, season), HttpStatus.CREATED);
     }
 
     /**
@@ -121,8 +121,8 @@ public class SeasonController {
      * @throws IllegalArgumentException if season is null
      */
     @PostMapping("/update")
-    public Result<Void> update(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
-        return seasonFacade.update(season);
+    public ResponseEntity<Result<Void>> update(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
+        return processResult(seasonFacade.update(season));
     }
 
     /**
@@ -140,8 +140,8 @@ public class SeasonController {
      * @return result with validation errors
      */
     @DeleteMapping("/remove")
-    public Result<Void> remove(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
-        return seasonFacade.remove(season);
+    public ResponseEntity<Result<Void>> remove(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
+        return processResult(seasonFacade.remove(season));
     }
 
     /**
@@ -159,8 +159,8 @@ public class SeasonController {
      * @return result with validation errors
      */
     @RequestMapping("/duplicate")
-    public Result<Void> duplicate(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
-        return seasonFacade.duplicate(season);
+    public ResponseEntity<Result<Void>> duplicate(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
+        return processResult(seasonFacade.duplicate(season), HttpStatus.CREATED);
     }
 
     /**
@@ -179,8 +179,8 @@ public class SeasonController {
      * @return result with validation errors
      */
     @RequestMapping("/moveUp")
-    public Result<Void> moveUp(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
-        return seasonFacade.moveUp(season);
+    public ResponseEntity<Result<Void>> moveUp(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
+        return processResult(seasonFacade.moveUp(season));
     }
 
     /**
@@ -199,8 +199,8 @@ public class SeasonController {
      * @return result with validation errors
      */
     @RequestMapping("/moveDown")
-    public Result<Void> moveDown(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
-        return seasonFacade.moveDown(season);
+    public ResponseEntity<Result<Void>> moveDown(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
+        return processResult(seasonFacade.moveDown(season));
     }
 
     /**
@@ -217,11 +217,11 @@ public class SeasonController {
      * @return result with list of seasons or validation error
      */
     @GetMapping({ "", "/", "/list" })
-    public Result<List<Season>> findSeasonsByShow(@PathVariable("showId") final Integer showId) {
+    public ResponseEntity<Result<List<Season>>> findSeasonsByShow(@PathVariable("showId") final Integer showId) {
         final Show show = new Show();
         show.setId(showId);
 
-        return seasonFacade.find(show);
+        return processResult(seasonFacade.find(show));
     }
 
 }

@@ -8,8 +8,9 @@ import cz.vhromada.catalog.facade.SongFacade;
 import cz.vhromada.result.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,8 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController("songController")
 @RequestMapping("/catalog/music/{musicId}/songs")
-@CrossOrigin
-public class SongController {
+public class SongController extends AbstractCatalogController {
 
     /**
      * Facade for songs
@@ -60,8 +60,9 @@ public class SongController {
      * @return result with song or validation errors
      */
     @GetMapping("/{songId}")
-    public Result<Song> getSong(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @PathVariable("songId") final Integer songId) {
-        return songFacade.get(songId);
+    public ResponseEntity<Result<Song>> getSong(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId,
+        @PathVariable("songId") final Integer songId) {
+        return processResult(songFacade.get(songId));
     }
 
     /**
@@ -85,11 +86,11 @@ public class SongController {
      * @return result with validation errors
      */
     @PutMapping("/add")
-    public Result<Void> add(@PathVariable("musicId") final Integer musicId, @RequestBody final Song song) {
+    public ResponseEntity<Result<Void>> add(@PathVariable("musicId") final Integer musicId, @RequestBody final Song song) {
         final Music music = new Music();
         music.setId(musicId);
 
-        return songFacade.add(music, song);
+        return processResult(songFacade.add(music, song), HttpStatus.CREATED);
     }
 
     /**
@@ -111,8 +112,8 @@ public class SongController {
      * @return result with validation errors
      */
     @PostMapping("/update")
-    public Result<Void> update(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
-        return songFacade.update(song);
+    public ResponseEntity<Result<Void>> update(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
+        return processResult(songFacade.update(song));
     }
 
     /**
@@ -130,8 +131,8 @@ public class SongController {
      * @return result with validation errors
      */
     @DeleteMapping("/remove")
-    public Result<Void> remove(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
-        return songFacade.remove(song);
+    public ResponseEntity<Result<Void>> remove(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
+        return processResult(songFacade.remove(song));
     }
 
     /**
@@ -149,8 +150,8 @@ public class SongController {
      * @return result with validation errors
      */
     @RequestMapping("/duplicate")
-    public Result<Void> duplicate(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
-        return songFacade.duplicate(song);
+    public ResponseEntity<Result<Void>> duplicate(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
+        return processResult(songFacade.duplicate(song), HttpStatus.CREATED);
     }
 
     /**
@@ -169,8 +170,8 @@ public class SongController {
      * @return result with validation errors
      */
     @RequestMapping("/moveUp")
-    public Result<Void> moveUp(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
-        return songFacade.moveUp(song);
+    public ResponseEntity<Result<Void>> moveUp(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
+        return processResult(songFacade.moveUp(song));
     }
 
     /**
@@ -189,8 +190,8 @@ public class SongController {
      * @return result with validation errors
      */
     @RequestMapping("/moveDown")
-    public Result<Void> moveDown(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
-        return songFacade.moveDown(song);
+    public ResponseEntity<Result<Void>> moveDown(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
+        return processResult(songFacade.moveDown(song));
     }
 
     /**
@@ -207,11 +208,11 @@ public class SongController {
      * @return result with list of songs or validation error
      */
     @GetMapping({ "", "/", "/list" })
-    public Result<List<Song>> findSongsByMusic(@PathVariable("musicId") final Integer musicId) {
+    public ResponseEntity<Result<List<Song>>> findSongsByMusic(@PathVariable("musicId") final Integer musicId) {
         final Music music = new Music();
         music.setId(musicId);
 
-        return songFacade.find(music);
+        return processResult(songFacade.find(music));
     }
 
 }

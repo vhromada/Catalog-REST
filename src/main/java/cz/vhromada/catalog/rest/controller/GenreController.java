@@ -7,8 +7,9 @@ import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.result.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,8 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController("genreController")
 @RequestMapping("/catalog/genres")
-@CrossOrigin
-public class GenreController {
+public class GenreController extends AbstractCatalogController {
 
     /**
      * Facade for genres
@@ -52,8 +52,8 @@ public class GenreController {
      * @return result
      */
     @PostMapping("/new")
-    public Result<Void> newData() {
-        return genreFacade.newData();
+    public ResponseEntity<Result<Void>> newData() {
+        return processResult(genreFacade.newData());
     }
 
     /**
@@ -62,8 +62,8 @@ public class GenreController {
      * @return result with list of genres
      */
     @GetMapping({ "", "/", "/list" })
-    public Result<List<Genre>> getGenres() {
-        return genreFacade.getAll();
+    public ResponseEntity<Result<List<Genre>>> getGenres() {
+        return processResult(genreFacade.getAll());
     }
 
     /**
@@ -78,8 +78,8 @@ public class GenreController {
      * @return result with genre or validation errors
      */
     @GetMapping("/{id}")
-    public Result<Genre> getGenre(@PathVariable("id") final Integer id) {
-        return genreFacade.get(id);
+    public ResponseEntity<Result<Genre>> getGenre(@PathVariable("id") final Integer id) {
+        return processResult(genreFacade.get(id));
     }
 
     /**
@@ -97,8 +97,8 @@ public class GenreController {
      * @return result with validation errors
      */
     @PutMapping("/add")
-    public Result<Void> add(@RequestBody final Genre genre) {
-        return genreFacade.add(genre);
+    public ResponseEntity<Result<Void>> add(@RequestBody final Genre genre) {
+        return processResult(genreFacade.add(genre), HttpStatus.CREATED);
     }
 
     /**
@@ -117,8 +117,8 @@ public class GenreController {
      * @return result with validation errors
      */
     @PostMapping("/update")
-    public Result<Void> update(@RequestBody final Genre genre) {
-        return genreFacade.update(genre);
+    public ResponseEntity<Result<Void>> update(@RequestBody final Genre genre) {
+        return processResult(genreFacade.update(genre));
     }
 
     /**
@@ -135,8 +135,8 @@ public class GenreController {
      * @return result with validation errors
      */
     @DeleteMapping("/remove")
-    public Result<Void> remove(@RequestBody final Genre genre) {
-        return genreFacade.remove(genre);
+    public ResponseEntity<Result<Void>> remove(@RequestBody final Genre genre) {
+        return processResult(genreFacade.remove(genre));
     }
 
     /**
@@ -153,8 +153,8 @@ public class GenreController {
      * @return result with validation errors
      */
     @PostMapping("/duplicate")
-    public Result<Void> duplicate(@RequestBody final Genre genre) {
-        return genreFacade.duplicate(genre);
+    public ResponseEntity<Result<Void>> duplicate(@RequestBody final Genre genre) {
+        return processResult(genreFacade.duplicate(genre), HttpStatus.CREATED);
     }
 
     /**
@@ -172,8 +172,8 @@ public class GenreController {
      * @return result with validation errors
      */
     @PostMapping("/moveUp")
-    public Result<Void> moveUp(@RequestBody final Genre genre) {
-        return genreFacade.moveUp(genre);
+    public ResponseEntity<Result<Void>> moveUp(@RequestBody final Genre genre) {
+        return processResult(genreFacade.moveUp(genre));
     }
 
     /**
@@ -191,8 +191,8 @@ public class GenreController {
      * @return result with validation errors
      */
     @PostMapping("/moveDown")
-    public Result<Void> moveDown(@RequestBody final Genre genre) {
-        return genreFacade.moveDown(genre);
+    public ResponseEntity<Result<Void>> moveDown(@RequestBody final Genre genre) {
+        return processResult(genreFacade.moveDown(genre));
     }
 
     /**
@@ -201,8 +201,8 @@ public class GenreController {
      * @return result
      */
     @PostMapping("/updatePositions")
-    public Result<Void> updatePositions() {
-        return genreFacade.updatePositions();
+    public ResponseEntity<Result<Void>> updatePositions() {
+        return processResult(genreFacade.updatePositions());
     }
 
 }

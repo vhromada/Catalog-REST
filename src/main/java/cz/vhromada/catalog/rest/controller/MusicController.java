@@ -9,8 +9,9 @@ import cz.vhromada.result.Result;
 import cz.vhromada.result.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,8 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController("musicController")
 @RequestMapping("/catalog/music")
-@CrossOrigin
-public class MusicController {
+public class MusicController extends AbstractCatalogController {
 
     /**
      * Facade for music
@@ -54,8 +54,8 @@ public class MusicController {
      * @return result
      */
     @PostMapping("/new")
-    public Result<Void> newData() {
-        return musicFacade.newData();
+    public ResponseEntity<Result<Void>> newData() {
+        return processResult(musicFacade.newData());
     }
 
     /**
@@ -64,8 +64,8 @@ public class MusicController {
      * @return result with list of music
      */
     @GetMapping({ "", "/", "/list" })
-    public Result<List<Music>> getMusic() {
-        return musicFacade.getAll();
+    public ResponseEntity<Result<List<Music>>> getMusic() {
+        return processResult(musicFacade.getAll());
     }
 
     /**
@@ -80,8 +80,8 @@ public class MusicController {
      * @return result with music or validation errors
      */
     @GetMapping("/{id}")
-    public Result<Music> getMusic(@PathVariable("id") final Integer id) {
-        return musicFacade.get(id);
+    public ResponseEntity<Result<Music>> getMusic(@PathVariable("id") final Integer id) {
+        return processResult(musicFacade.get(id));
     }
 
     /**
@@ -104,8 +104,8 @@ public class MusicController {
      * @return result with validation errors
      */
     @PutMapping("/add")
-    public Result<Void> add(@RequestBody final Music music) {
-        return musicFacade.add(music);
+    public ResponseEntity<Result<Void>> add(@RequestBody final Music music) {
+        return processResult(musicFacade.add(music), HttpStatus.CREATED);
     }
 
     /**
@@ -129,8 +129,8 @@ public class MusicController {
      * @return result with validation errors
      */
     @PostMapping("/update")
-    public Result<Void> update(@RequestBody final Music music) {
-        return musicFacade.update(music);
+    public ResponseEntity<Result<Void>> update(@RequestBody final Music music) {
+        return processResult(musicFacade.update(music));
     }
 
     /**
@@ -147,8 +147,8 @@ public class MusicController {
      * @return result with validation errors
      */
     @DeleteMapping("/remove")
-    public Result<Void> remove(@RequestBody final Music music) {
-        return musicFacade.remove(music);
+    public ResponseEntity<Result<Void>> remove(@RequestBody final Music music) {
+        return processResult(musicFacade.remove(music));
     }
 
     /**
@@ -165,8 +165,8 @@ public class MusicController {
      * @return result with validation errors
      */
     @PostMapping("/duplicate")
-    public Result<Void> duplicate(@RequestBody final Music music) {
-        return musicFacade.duplicate(music);
+    public ResponseEntity<Result<Void>> duplicate(@RequestBody final Music music) {
+        return processResult(musicFacade.duplicate(music), HttpStatus.CREATED);
     }
 
     /**
@@ -184,8 +184,8 @@ public class MusicController {
      * @return result with validation errors
      */
     @PostMapping("/moveUp")
-    public Result<Void> moveUp(@RequestBody final Music music) {
-        return musicFacade.moveUp(music);
+    public ResponseEntity<Result<Void>> moveUp(@RequestBody final Music music) {
+        return processResult(musicFacade.moveUp(music));
     }
 
     /**
@@ -203,8 +203,8 @@ public class MusicController {
      * @return result with validation errors
      */
     @PostMapping("/moveDown")
-    public Result<Void> moveDown(@RequestBody final Music music) {
-        return musicFacade.moveDown(music);
+    public ResponseEntity<Result<Void>> moveDown(@RequestBody final Music music) {
+        return processResult(musicFacade.moveDown(music));
     }
 
     /**
@@ -213,8 +213,8 @@ public class MusicController {
      * @return result
      */
     @PostMapping("/updatePositions")
-    public Result<Void> updatePositions() {
-        return musicFacade.updatePositions();
+    public ResponseEntity<Result<Void>> updatePositions() {
+        return processResult(musicFacade.updatePositions());
     }
 
     /**
@@ -223,8 +223,8 @@ public class MusicController {
      * @return result with total count of media
      */
     @GetMapping("/totalMedia")
-    public Result<Integer> getTotalMediaCount() {
-        return musicFacade.getTotalMediaCount();
+    public ResponseEntity<Result<Integer>> getTotalMediaCount() {
+        return processResult(musicFacade.getTotalMediaCount());
     }
 
     /**
@@ -234,17 +234,17 @@ public class MusicController {
      */
     @GetMapping("/totalLength")
     @SuppressWarnings("Duplicates")
-    public Result<Integer> getTotalLength() {
+    public ResponseEntity<Result<Integer>> getTotalLength() {
         final Result<Time> lengthResult = musicFacade.getTotalLength();
 
         if (Status.OK == lengthResult.getStatus()) {
-            return Result.of(lengthResult.getData().getLength());
+            return processResult(Result.of(lengthResult.getData().getLength()));
         }
 
         final Result<Integer> result = new Result<>();
         result.addEvents(lengthResult.getEvents());
 
-        return result;
+        return processResult(result);
     }
 
     /**
@@ -253,8 +253,8 @@ public class MusicController {
      * @return result with count of songs from all music
      */
     @GetMapping("/songsCount")
-    public Result<Integer> getSongsCount() {
-        return musicFacade.getSongsCount();
+    public ResponseEntity<Result<Integer>> getSongsCount() {
+        return processResult(musicFacade.getSongsCount());
     }
 
 }

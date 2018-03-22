@@ -6,7 +6,7 @@ import java.util.List;
 import cz.vhromada.catalog.common.Language;
 import cz.vhromada.result.Result;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController("languageController")
 @RequestMapping("/catalog/languages")
-@CrossOrigin
-public class LanguageController {
+public class LanguageController extends AbstractCatalogController {
 
     /**
      * Returns list of languages.
@@ -27,8 +26,8 @@ public class LanguageController {
      * @return result with list of languages
      */
     @GetMapping({ "", "/", "/list" })
-    public Result<List<Language>> getLanguages() {
-        return Result.of(Arrays.asList(Language.values()));
+    public ResponseEntity<Result<List<Language>>> getLanguages() {
+        return processResult(Result.of(Arrays.asList(Language.values())));
     }
 
     /**
@@ -37,8 +36,8 @@ public class LanguageController {
      * @return result with list of subtitles
      */
     @GetMapping("/subtitles")
-    public Result<List<Language>> getSubtitles() {
-        return Result.of(Arrays.asList(Language.CZ, Language.EN));
+    public ResponseEntity<Result<List<Language>>> getSubtitles() {
+        return processResult(Result.of(Arrays.asList(Language.CZ, Language.EN)));
     }
 
 }

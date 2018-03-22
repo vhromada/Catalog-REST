@@ -7,8 +7,9 @@ import cz.vhromada.catalog.facade.ProgramFacade;
 import cz.vhromada.result.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,8 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController("programController")
 @RequestMapping("/catalog/programs")
-@CrossOrigin
-public class ProgramController {
+public class ProgramController extends AbstractCatalogController {
 
     /**
      * Facade for programs
@@ -52,8 +52,8 @@ public class ProgramController {
      * @return result
      */
     @PostMapping("/new")
-    public Result<Void> newData() {
-        return programFacade.newData();
+    public ResponseEntity<Result<Void>> newData() {
+        return processResult(programFacade.newData());
     }
 
     /**
@@ -62,8 +62,8 @@ public class ProgramController {
      * @return result with list of programs
      */
     @GetMapping({ "", "/", "/list" })
-    public Result<List<Program>> getPrograms() {
-        return programFacade.getAll();
+    public ResponseEntity<Result<List<Program>>> getPrograms() {
+        return processResult(programFacade.getAll());
     }
 
     /**
@@ -78,8 +78,8 @@ public class ProgramController {
      * @return result with program or validation errors
      */
     @GetMapping("/{id}")
-    public Result<Program> getProgram(@PathVariable("id") final Integer id) {
-        return programFacade.get(id);
+    public ResponseEntity<Result<Program>> getProgram(@PathVariable("id") final Integer id) {
+        return processResult(programFacade.get(id));
     }
 
     /**
@@ -102,8 +102,8 @@ public class ProgramController {
      * @return result with validation errors
      */
     @PutMapping("/add")
-    public Result<Void> add(@RequestBody final Program program) {
-        return programFacade.add(program);
+    public ResponseEntity<Result<Void>> add(@RequestBody final Program program) {
+        return processResult(programFacade.add(program), HttpStatus.CREATED);
     }
 
     /**
@@ -127,8 +127,8 @@ public class ProgramController {
      * @return result with validation errors
      */
     @PostMapping("/update")
-    public Result<Void> update(@RequestBody final Program program) {
-        return programFacade.update(program);
+    public ResponseEntity<Result<Void>> update(@RequestBody final Program program) {
+        return processResult(programFacade.update(program));
     }
 
     /**
@@ -145,8 +145,8 @@ public class ProgramController {
      * @return result with validation errors
      */
     @DeleteMapping("/remove")
-    public Result<Void> remove(@RequestBody final Program program) {
-        return programFacade.remove(program);
+    public ResponseEntity<Result<Void>> remove(@RequestBody final Program program) {
+        return processResult(programFacade.remove(program));
     }
 
     /**
@@ -163,8 +163,8 @@ public class ProgramController {
      * @return result with validation errors
      */
     @PostMapping("/duplicate")
-    public Result<Void> duplicate(@RequestBody final Program program) {
-        return programFacade.duplicate(program);
+    public ResponseEntity<Result<Void>> duplicate(@RequestBody final Program program) {
+        return processResult(programFacade.duplicate(program), HttpStatus.CREATED);
     }
 
     /**
@@ -182,8 +182,8 @@ public class ProgramController {
      * @return result with validation errors
      */
     @PostMapping("/moveUp")
-    public Result<Void> moveUp(@RequestBody final Program program) {
-        return programFacade.moveUp(program);
+    public ResponseEntity<Result<Void>> moveUp(@RequestBody final Program program) {
+        return processResult(programFacade.moveUp(program));
     }
 
     /**
@@ -201,8 +201,8 @@ public class ProgramController {
      * @return result with validation errors
      */
     @PostMapping("/moveDown")
-    public Result<Void> moveDown(@RequestBody final Program program) {
-        return programFacade.moveDown(program);
+    public ResponseEntity<Result<Void>> moveDown(@RequestBody final Program program) {
+        return processResult(programFacade.moveDown(program));
     }
 
     /**
@@ -211,8 +211,8 @@ public class ProgramController {
      * @return result
      */
     @PostMapping("/updatePositions")
-    public Result<Void> updatePositions() {
-        return programFacade.updatePositions();
+    public ResponseEntity<Result<Void>> updatePositions() {
+        return processResult(programFacade.updatePositions());
     }
 
     /**
@@ -221,8 +221,8 @@ public class ProgramController {
      * @return result with total count of media
      */
     @GetMapping("/totalMedia")
-    public Result<Integer> getTotalMediaCount() {
-        return programFacade.getTotalMediaCount();
+    public ResponseEntity<Result<Integer>> getTotalMediaCount() {
+        return processResult(programFacade.getTotalMediaCount());
     }
 
 }

@@ -37,16 +37,16 @@ public class RestApplication {
     @Bean
     public Docket applicationApi() {
         final ApiInfo info = new ApiInfoBuilder()
-                .title("Catalog")
-                .description("Catalog of movies, games, music and programs ")
-                .version("1.0.0")
-                .build();
+            .title("Catalog")
+            .description("Catalog of movies, games, music and programs ")
+            .version("1.0.0")
+            .build();
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("catalog")
-                .apiInfo(info)
-                .select()
-                .paths(PathSelectors.regex("/catalog.*"))
-                .build();
+            .groupName("catalog")
+            .apiInfo(info)
+            .select()
+            .paths(PathSelectors.regex("/catalog.*"))
+            .build();
     }
 
 }

@@ -9,8 +9,9 @@ import cz.vhromada.result.Result;
 import cz.vhromada.result.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,8 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController("movieController")
 @RequestMapping("/catalog/movies")
-@CrossOrigin
-public class MovieController {
+public class MovieController extends AbstractCatalogController {
 
     /**
      * Facade for movies
@@ -54,8 +54,8 @@ public class MovieController {
      * @return result
      */
     @PostMapping("/new")
-    public Result<Void> newData() {
-        return movieFacade.newData();
+    public ResponseEntity<Result<Void>> newData() {
+        return processResult(movieFacade.newData());
     }
 
     /**
@@ -64,8 +64,8 @@ public class MovieController {
      * @return result with list of movies
      */
     @GetMapping({ "", "/", "/list" })
-    public Result<List<Movie>> getMovies() {
-        return movieFacade.getAll();
+    public ResponseEntity<Result<List<Movie>>> getMovies() {
+        return processResult(movieFacade.getAll());
     }
 
     /**
@@ -80,8 +80,8 @@ public class MovieController {
      * @return result with movie or validation errors
      */
     @GetMapping("/{id}")
-    public Result<Movie> getMovie(@PathVariable("id") final Integer id) {
-        return movieFacade.get(id);
+    public ResponseEntity<Result<Movie>> getMovie(@PathVariable("id") final Integer id) {
+        return processResult(movieFacade.get(id));
     }
 
     /**
@@ -120,8 +120,8 @@ public class MovieController {
      * @return result with validation errors
      */
     @PutMapping("/add")
-    public Result<Void> add(@RequestBody final Movie movie) {
-        return movieFacade.add(movie);
+    public ResponseEntity<Result<Void>> add(@RequestBody final Movie movie) {
+        return processResult(movieFacade.add(movie), HttpStatus.CREATED);
     }
 
     /**
@@ -161,8 +161,8 @@ public class MovieController {
      * @return result with validation errors
      */
     @PostMapping("/update")
-    public Result<Void> update(@RequestBody final Movie movie) {
-        return movieFacade.update(movie);
+    public ResponseEntity<Result<Void>> update(@RequestBody final Movie movie) {
+        return processResult(movieFacade.update(movie));
     }
 
     /**
@@ -179,8 +179,8 @@ public class MovieController {
      * @return result with validation errors
      */
     @DeleteMapping("/remove")
-    public Result<Void> remove(@RequestBody final Movie movie) {
-        return movieFacade.remove(movie);
+    public ResponseEntity<Result<Void>> remove(@RequestBody final Movie movie) {
+        return processResult(movieFacade.remove(movie));
     }
 
     /**
@@ -197,8 +197,8 @@ public class MovieController {
      * @return result with validation errors
      */
     @PostMapping("/duplicate")
-    public Result<Void> duplicate(@RequestBody final Movie movie) {
-        return movieFacade.duplicate(movie);
+    public ResponseEntity<Result<Void>> duplicate(@RequestBody final Movie movie) {
+        return processResult(movieFacade.duplicate(movie), HttpStatus.CREATED);
     }
 
     /**
@@ -216,8 +216,8 @@ public class MovieController {
      * @return result with validation errors
      */
     @PostMapping("/moveUp")
-    public Result<Void> moveUp(@RequestBody final Movie movie) {
-        return movieFacade.moveUp(movie);
+    public ResponseEntity<Result<Void>> moveUp(@RequestBody final Movie movie) {
+        return processResult(movieFacade.moveUp(movie));
     }
 
     /**
@@ -235,8 +235,8 @@ public class MovieController {
      * @return result with validation errors
      */
     @PostMapping("/moveDown")
-    public Result<Void> moveDown(@RequestBody final Movie movie) {
-        return movieFacade.moveDown(movie);
+    public ResponseEntity<Result<Void>> moveDown(@RequestBody final Movie movie) {
+        return processResult(movieFacade.moveDown(movie));
     }
 
     /**
@@ -245,8 +245,8 @@ public class MovieController {
      * @return result
      */
     @PostMapping("/updatePositions")
-    public Result<Void> updatePositions() {
-        return movieFacade.updatePositions();
+    public ResponseEntity<Result<Void>> updatePositions() {
+        return processResult(movieFacade.updatePositions());
     }
 
     /**
@@ -255,8 +255,8 @@ public class MovieController {
      * @return result with total count of media
      */
     @GetMapping("/totalMedia")
-    public Result<Integer> getTotalMediaCount() {
-        return movieFacade.getTotalMediaCount();
+    public ResponseEntity<Result<Integer>> getTotalMediaCount() {
+        return processResult(movieFacade.getTotalMediaCount());
     }
 
     /**
@@ -266,17 +266,17 @@ public class MovieController {
      */
     @GetMapping("/totalLength")
     @SuppressWarnings("Duplicates")
-    public Result<Integer> getTotalLength() {
+    public ResponseEntity<Result<Integer>> getTotalLength() {
         final Result<Time> lengthResult = movieFacade.getTotalLength();
 
         if (Status.OK == lengthResult.getStatus()) {
-            return Result.of(lengthResult.getData().getLength());
+            return processResult(Result.of(lengthResult.getData().getLength()));
         }
 
         final Result<Integer> result = new Result<>();
         result.addEvents(lengthResult.getEvents());
 
-        return result;
+        return processResult(result);
     }
 
 }

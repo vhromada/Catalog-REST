@@ -9,8 +9,9 @@ import cz.vhromada.result.Result;
 import cz.vhromada.result.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,8 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController("showController")
 @RequestMapping("/catalog/shows")
-@CrossOrigin
-public class ShowController {
+public class ShowController extends AbstractCatalogController {
 
     /**
      * Facade for shows
@@ -54,8 +54,8 @@ public class ShowController {
      * @return result
      */
     @PostMapping("/new")
-    public Result<Void> newData() {
-        return showFacade.newData();
+    public ResponseEntity<Result<Void>> newData() {
+        return processResult(showFacade.newData());
     }
 
     /**
@@ -64,8 +64,8 @@ public class ShowController {
      * @return result with list of shows
      */
     @GetMapping({ "", "/", "/list" })
-    public Result<List<Show>> getShows() {
-        return showFacade.getAll();
+    public ResponseEntity<Result<List<Show>>> getShows() {
+        return processResult(showFacade.getAll());
     }
 
     /**
@@ -80,8 +80,8 @@ public class ShowController {
      * @return result with show or validation errors
      */
     @GetMapping("/{id}")
-    public Result<Show> getShow(@PathVariable("id") final Integer id) {
-        return showFacade.get(id);
+    public ResponseEntity<Result<Show>> getShow(@PathVariable("id") final Integer id) {
+        return processResult(showFacade.get(id));
     }
 
     /**
@@ -113,8 +113,8 @@ public class ShowController {
      * @return result with validation errors
      */
     @PutMapping("/add")
-    public Result<Void> add(@RequestBody final Show show) {
-        return showFacade.add(show);
+    public ResponseEntity<Result<Void>> add(@RequestBody final Show show) {
+        return processResult(showFacade.add(show), HttpStatus.CREATED);
     }
 
     /**
@@ -147,8 +147,8 @@ public class ShowController {
      * @return result with validation errors
      */
     @PostMapping("/update")
-    public Result<Void> update(@RequestBody final Show show) {
-        return showFacade.update(show);
+    public ResponseEntity<Result<Void>> update(@RequestBody final Show show) {
+        return processResult(showFacade.update(show));
     }
 
     /**
@@ -165,8 +165,8 @@ public class ShowController {
      * @return result with validation errors
      */
     @DeleteMapping("/remove")
-    public Result<Void> remove(@RequestBody final Show show) {
-        return showFacade.remove(show);
+    public ResponseEntity<Result<Void>> remove(@RequestBody final Show show) {
+        return processResult(showFacade.remove(show));
     }
 
     /**
@@ -183,8 +183,8 @@ public class ShowController {
      * @return result with validation errors
      */
     @PostMapping("/duplicate")
-    public Result<Void> duplicate(@RequestBody final Show show) {
-        return showFacade.duplicate(show);
+    public ResponseEntity<Result<Void>> duplicate(@RequestBody final Show show) {
+        return processResult(showFacade.duplicate(show), HttpStatus.CREATED);
     }
 
     /**
@@ -202,8 +202,8 @@ public class ShowController {
      * @return result with validation errors
      */
     @PostMapping("/moveUp")
-    public Result<Void> moveUp(@RequestBody final Show show) {
-        return showFacade.moveUp(show);
+    public ResponseEntity<Result<Void>> moveUp(@RequestBody final Show show) {
+        return processResult(showFacade.moveUp(show));
     }
 
     /**
@@ -221,8 +221,8 @@ public class ShowController {
      * @return result with validation errors
      */
     @PostMapping("/moveDown")
-    public Result<Void> moveDown(@RequestBody final Show show) {
-        return showFacade.moveDown(show);
+    public ResponseEntity<Result<Void>> moveDown(@RequestBody final Show show) {
+        return processResult(showFacade.moveDown(show));
     }
 
     /**
@@ -231,8 +231,8 @@ public class ShowController {
      * @return result
      */
     @PostMapping("/updatePositions")
-    public Result<Void> updatePositions() {
-        return showFacade.updatePositions();
+    public ResponseEntity<Result<Void>> updatePositions() {
+        return processResult(showFacade.updatePositions());
     }
 
     /**
@@ -242,17 +242,17 @@ public class ShowController {
      */
     @GetMapping("/totalLength")
     @SuppressWarnings("Duplicates")
-    public Result<Integer> getTotalLength() {
+    public ResponseEntity<Result<Integer>> getTotalLength() {
         final Result<Time> lengthResult = showFacade.getTotalLength();
 
         if (Status.OK == lengthResult.getStatus()) {
-            return Result.of(lengthResult.getData().getLength());
+            return processResult(Result.of(lengthResult.getData().getLength()));
         }
 
         final Result<Integer> result = new Result<>();
         result.addEvents(lengthResult.getEvents());
 
-        return result;
+        return processResult(result);
     }
 
     /**
@@ -261,8 +261,8 @@ public class ShowController {
      * @return result with count of seasons from all shows
      */
     @GetMapping("/seasonsCount")
-    public Result<Integer> getSeasonsCount() {
-        return showFacade.getSeasonsCount();
+    public ResponseEntity<Result<Integer>> getSeasonsCount() {
+        return processResult(showFacade.getSeasonsCount());
     }
 
     /**
@@ -271,8 +271,8 @@ public class ShowController {
      * @return result with count of episodes from all shows
      */
     @GetMapping("/episodesCount")
-    public Result<Integer> getEpisodesCount() {
-        return showFacade.getEpisodesCount();
+    public ResponseEntity<Result<Integer>> getEpisodesCount() {
+        return processResult(showFacade.getEpisodesCount());
     }
 
 }
