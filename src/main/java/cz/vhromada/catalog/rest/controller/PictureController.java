@@ -155,6 +155,52 @@ public class PictureController extends AbstractCatalogController {
     }
 
     /**
+     * Moves picture in list one position up.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>ID is null</li>
+     * <li>Picture can't be moved up</li>
+     * <li>Picture doesn't exist in data storage</li>
+     * </ul>
+     *
+     * @param id ID
+     * @return result with validation errors
+     */
+    @PostMapping("/moveUp/{id}")
+    public ResponseEntity<Result<Void>> moveUp(@PathVariable("id") final Integer id) {
+        return processResult(pictureFacade.moveUp(newPicture(id)));
+    }
+
+    /**
+     * Moves picture in list one position down.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>ID is null</li>
+     * <li>Picture can't be moved down</li>
+     * <li>Picture doesn't exist in data storage</li>
+     * </ul>
+     *
+     * @param id ID
+     * @return result with validation errors
+     */
+    @PostMapping("/moveDown/{id}")
+    public ResponseEntity<Result<Void>> moveDown(@PathVariable("id") final Integer id) {
+        return processResult(pictureFacade.moveDown(newPicture(id)));
+    }
+
+    /**
+     * Updates positions.
+     *
+     * @return result
+     */
+    @PostMapping("/updatePositions")
+    public ResponseEntity<Result<Void>> updatePositions() {
+        return processResult(pictureFacade.updatePositions());
+    }
+
+    /**
      * Creates a new picture.
      *
      * @param id ID
