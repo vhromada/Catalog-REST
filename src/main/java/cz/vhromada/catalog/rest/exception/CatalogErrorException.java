@@ -22,7 +22,7 @@ public class CatalogErrorException extends RuntimeException {
     private final HttpStatus status;
 
     /**
-     * Event
+     * Result
      */
     private final Result<?> result;
 
@@ -32,7 +32,6 @@ public class CatalogErrorException extends RuntimeException {
      * @param status HTTP status
      * @param result result
      */
-
     public CatalogErrorException(final HttpStatus status, final Result<?> result) {
         this.status = status;
         this.result = result;
@@ -48,7 +47,9 @@ public class CatalogErrorException extends RuntimeException {
     }
 
     /**
-     * Result
+     * Returns result.
+     *
+     * @return result
      */
     public Result<?> getResult() {
         return result;
