@@ -75,11 +75,13 @@ public class PictureController extends AbstractCatalogController {
     public ResponseEntity<Result<List<Integer>>> getPictures() {
         final Result<List<Picture>> pictures = pictureFacade.getAll();
 
-        final Result<List<Integer>> result = new Result<>();
-        result.addEvents(result.getEvents());
+        final Result<List<Integer>> result;
         if (pictures.getData() != null) {
-            result.setData(pictures.getData().stream().map(Picture::getId).collect(Collectors.toList()));
+            result = Result.of(pictures.getData().stream().map(Picture::getId).collect(Collectors.toList()));
+        } else {
+            result = new Result<>();
         }
+        result.addEvents(result.getEvents());
 
         return processResult(result);
     }
