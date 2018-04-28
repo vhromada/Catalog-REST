@@ -61,7 +61,7 @@ public class GenreController extends AbstractCatalogController {
      *
      * @return result with list of genres
      */
-    @GetMapping({ "", "/", "/list" })
+    @GetMapping({ "", "/list" })
     public ResponseEntity<Result<List<Genre>>> getGenres() {
         return processResult(genreFacade.getAll());
     }
@@ -89,6 +89,7 @@ public class GenreController extends AbstractCatalogController {
      * <ul>
      * <li>Genre is null</li>
      * <li>ID isn't null</li>
+     * <li>Position isn't null</li>
      * <li>Name is null</li>
      * <li>Name is empty string</li>
      * </ul>
@@ -108,6 +109,7 @@ public class GenreController extends AbstractCatalogController {
      * <ul>
      * <li>Genre is null</li>
      * <li>ID is null</li>
+     * <li>Position is null</li>
      * <li>Name is null</li>
      * <li>Name is empty string</li>
      * <li>Genre doesn't exist in data storage</li>

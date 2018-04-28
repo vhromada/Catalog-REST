@@ -75,6 +75,7 @@ public class SongController extends AbstractCatalogController {
      * <li>Music doesn't exist in data storage</li>
      * <li>Song is null</li>
      * <li>Song ID isn't null</li>
+     * <li>Song position isn't null</li>
      * <li>Name is null</li>
      * <li>Name is empty string</li>
      * <li>Length of song is negative value</li>
@@ -100,6 +101,7 @@ public class SongController extends AbstractCatalogController {
      * <ul>
      * <li>Song is null</li>
      * <li>ID isn't null</li>
+     * <li>Position is null</li>
      * <li>Name is null</li>
      * <li>Name is empty string</li>
      * <li>Length of song is negative value</li>
@@ -149,7 +151,7 @@ public class SongController extends AbstractCatalogController {
      * @param song    song
      * @return result with validation errors
      */
-    @RequestMapping("/duplicate")
+    @PostMapping("/duplicate")
     public ResponseEntity<Result<Void>> duplicate(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
         return processResult(songFacade.duplicate(song), HttpStatus.CREATED);
     }
@@ -169,7 +171,7 @@ public class SongController extends AbstractCatalogController {
      * @param song    song
      * @return result with validation errors
      */
-    @RequestMapping("/moveUp")
+    @PostMapping("/moveUp")
     public ResponseEntity<Result<Void>> moveUp(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
         return processResult(songFacade.moveUp(song));
     }
@@ -189,7 +191,7 @@ public class SongController extends AbstractCatalogController {
      * @param song    song
      * @return result with validation errors
      */
-    @RequestMapping("/moveDown")
+    @PostMapping("/moveDown")
     public ResponseEntity<Result<Void>> moveDown(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
         return processResult(songFacade.moveDown(song));
     }
@@ -207,7 +209,7 @@ public class SongController extends AbstractCatalogController {
      * @param musicId music ID
      * @return result with list of songs or validation error
      */
-    @GetMapping({ "", "/", "/list" })
+    @GetMapping({ "", "/list" })
     public ResponseEntity<Result<List<Song>>> findSongsByMusic(@PathVariable("musicId") final Integer musicId) {
         final Music music = new Music();
         music.setId(musicId);

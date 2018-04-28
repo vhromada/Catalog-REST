@@ -2,9 +2,9 @@ package cz.vhromada.catalog.rest.controller;
 
 import java.util.List;
 
-import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.entity.Movie;
 import cz.vhromada.catalog.facade.MovieFacade;
+import cz.vhromada.common.Time;
 import cz.vhromada.result.Result;
 import cz.vhromada.result.Status;
 
@@ -63,7 +63,7 @@ public class MovieController extends AbstractCatalogController {
      *
      * @return result with list of movies
      */
-    @GetMapping({ "", "/", "/list" })
+    @GetMapping({ "", "/list" })
     public ResponseEntity<Result<List<Movie>>> getMovies() {
         return processResult(movieFacade.getAll());
     }
@@ -91,6 +91,7 @@ public class MovieController extends AbstractCatalogController {
      * <ul>
      * <li>Movie is null</li>
      * <li>ID isn't null</li>
+     * <li>Position isn't null</li>
      * <li>Czech name is null</li>
      * <li>Czech name is empty string</li>
      * <li>Original name is null</li>
@@ -131,6 +132,7 @@ public class MovieController extends AbstractCatalogController {
      * <ul>
      * <li>Movie is null</li>
      * <li>ID is null</li>
+     * <li>Position is null</li>
      * <li>Czech name is null</li>
      * <li>Czech name is empty string</li>
      * <li>Original name is null</li>

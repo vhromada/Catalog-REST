@@ -2,9 +2,9 @@ package cz.vhromada.catalog.rest.controller;
 
 import java.util.List;
 
-import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.facade.ShowFacade;
+import cz.vhromada.common.Time;
 import cz.vhromada.result.Result;
 import cz.vhromada.result.Status;
 
@@ -63,7 +63,7 @@ public class ShowController extends AbstractCatalogController {
      *
      * @return result with list of shows
      */
-    @GetMapping({ "", "/", "/list" })
+    @GetMapping({ "", "/list" })
     public ResponseEntity<Result<List<Show>>> getShows() {
         return processResult(showFacade.getAll());
     }
@@ -91,6 +91,7 @@ public class ShowController extends AbstractCatalogController {
      * <ul>
      * <li>Show is null</li>
      * <li>ID isn't null</li>
+     * <li>Position isn't null</li>
      * <li>Czech name is null</li>
      * <li>Czech name is empty string</li>
      * <li>Original name is null</li>
@@ -124,6 +125,7 @@ public class ShowController extends AbstractCatalogController {
      * <ul>
      * <li>Show is null</li>
      * <li>ID is null</li>
+     * <li>Position is null</li>
      * <li>Czech name is null</li>
      * <li>Czech name is empty string</li>
      * <li>Original name is null</li>

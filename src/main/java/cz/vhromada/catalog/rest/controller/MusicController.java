@@ -2,9 +2,9 @@ package cz.vhromada.catalog.rest.controller;
 
 import java.util.List;
 
-import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.facade.MusicFacade;
+import cz.vhromada.common.Time;
 import cz.vhromada.result.Result;
 import cz.vhromada.result.Status;
 
@@ -63,7 +63,7 @@ public class MusicController extends AbstractCatalogController {
      *
      * @return result with list of music
      */
-    @GetMapping({ "", "/", "/list" })
+    @GetMapping({ "", "/list" })
     public ResponseEntity<Result<List<Music>>> getMusic() {
         return processResult(musicFacade.getAll());
     }
@@ -91,6 +91,7 @@ public class MusicController extends AbstractCatalogController {
      * <ul>
      * <li>Music is null</li>
      * <li>ID isn't null</li>
+     * <li>Position isn't null</li>
      * <li>Name is null</li>
      * <li>Name is empty string</li>
      * <li>URL to english Wikipedia page about music is null</li>
@@ -115,6 +116,7 @@ public class MusicController extends AbstractCatalogController {
      * <ul>
      * <li>Music is null</li>
      * <li>ID is null</li>
+     * <li>Position is null</li>
      * <li>Name is null</li>
      * <li>Name is empty string</li>
      * <li>URL to english Wikipedia page about music is null</li>

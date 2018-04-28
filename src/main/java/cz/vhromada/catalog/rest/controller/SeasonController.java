@@ -75,6 +75,7 @@ public class SeasonController extends AbstractCatalogController {
      * <li>Show doesn't exist in season storage</li>
      * <li>Season is null</li>
      * <li>Season ID isn't null</li>
+     * <li>Season position isn't null</li>
      * <li>Number of season isn't positive number</li>
      * <li>Starting year isn't between 1940 and current year</li>
      * <li>Ending year isn't between 1940 and current year</li>
@@ -104,6 +105,7 @@ public class SeasonController extends AbstractCatalogController {
      * <ul>
      * <li>Season is null</li>
      * <li>ID is null</li>
+     * <li>Position is null</li>
      * <li>Number of season isn't positive number</li>
      * <li>Starting year isn't between 1940 and current year</li>
      * <li>Ending year isn't between 1940 and current year</li>
@@ -158,7 +160,7 @@ public class SeasonController extends AbstractCatalogController {
      * @param season season
      * @return result with validation errors
      */
-    @RequestMapping("/duplicate")
+    @PostMapping("/duplicate")
     public ResponseEntity<Result<Void>> duplicate(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
         return processResult(seasonFacade.duplicate(season), HttpStatus.CREATED);
     }
@@ -178,7 +180,7 @@ public class SeasonController extends AbstractCatalogController {
      * @param season season
      * @return result with validation errors
      */
-    @RequestMapping("/moveUp")
+    @PostMapping("/moveUp")
     public ResponseEntity<Result<Void>> moveUp(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
         return processResult(seasonFacade.moveUp(season));
     }
@@ -198,7 +200,7 @@ public class SeasonController extends AbstractCatalogController {
      * @param season season
      * @return result with validation errors
      */
-    @RequestMapping("/moveDown")
+    @PostMapping("/moveDown")
     public ResponseEntity<Result<Void>> moveDown(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
         return processResult(seasonFacade.moveDown(season));
     }
@@ -216,7 +218,7 @@ public class SeasonController extends AbstractCatalogController {
      * @param showId show ID
      * @return result with list of seasons or validation error
      */
-    @GetMapping({ "", "/", "/list" })
+    @GetMapping({ "", "/list" })
     public ResponseEntity<Result<List<Season>>> findSeasonsByShow(@PathVariable("showId") final Integer showId) {
         final Show show = new Show();
         show.setId(showId);

@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.rest.controller;
 
-import cz.vhromada.catalog.common.Time;
+import cz.vhromada.common.Time;
 import cz.vhromada.result.Result;
 
 import org.springframework.http.ResponseEntity;

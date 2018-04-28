@@ -61,7 +61,7 @@ public class ProgramController extends AbstractCatalogController {
      *
      * @return result with list of programs
      */
-    @GetMapping({ "", "/", "/list" })
+    @GetMapping({ "", "/list" })
     public ResponseEntity<Result<List<Program>>> getPrograms() {
         return processResult(programFacade.getAll());
     }
@@ -89,6 +89,7 @@ public class ProgramController extends AbstractCatalogController {
      * <ul>
      * <li>Program is null</li>
      * <li>ID isn't null</li>
+     * <li>Position isn't null</li>
      * <li>Name is null</li>
      * <li>Name is empty string</li>
      * <li>URL to english Wikipedia page about program is null</li>
@@ -113,6 +114,7 @@ public class ProgramController extends AbstractCatalogController {
      * <ul>
      * <li>Program is null</li>
      * <li>ID is null</li>
+     * <li>Position is null</li>
      * <li>Name is null</li>
      * <li>Name is empty string</li>
      * <li>URL to english Wikipedia page about program is null</li>

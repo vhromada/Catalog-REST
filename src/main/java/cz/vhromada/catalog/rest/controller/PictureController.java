@@ -17,7 +17,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +34,6 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @RestController("pictureController")
 @RequestMapping("/catalog/pictures")
-@CrossOrigin
 public class PictureController extends AbstractCatalogController {
 
     /**
@@ -71,7 +69,7 @@ public class PictureController extends AbstractCatalogController {
      *
      * @return result with list of pictures
      */
-    @GetMapping({ "", "/", "/list" })
+    @GetMapping({ "", "/list" })
     public ResponseEntity<Result<List<Integer>>> getPictures() {
         final Result<List<Picture>> pictures = pictureFacade.getAll();
 

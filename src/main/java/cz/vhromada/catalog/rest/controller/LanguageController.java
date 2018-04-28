@@ -3,7 +3,7 @@ package cz.vhromada.catalog.rest.controller;
 import java.util.Arrays;
 import java.util.List;
 
-import cz.vhromada.catalog.common.Language;
+import cz.vhromada.common.Language;
 import cz.vhromada.result.Result;
 
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ public class LanguageController extends AbstractCatalogController {
      *
      * @return result with list of languages
      */
-    @GetMapping({ "", "/", "/list" })
+    @GetMapping({ "", "/list" })
     public ResponseEntity<Result<List<Language>>> getLanguages() {
         return processResult(Result.of(Arrays.asList(Language.values())));
     }
