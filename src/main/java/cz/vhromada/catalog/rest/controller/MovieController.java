@@ -172,16 +172,17 @@ public class MovieController extends AbstractCatalogController {
      * <br>
      * Validation errors:
      * <ul>
-     * <li>Movie is null</li>
      * <li>ID is null</li>
      * <li>Movie doesn't exist in data storage</li>
      * </ul>
      *
-     * @param movie movie
+     * @param id ID
      * @return result with validation errors
      */
-    @DeleteMapping("/remove")
-    public ResponseEntity<Result<Void>> remove(@RequestBody final Movie movie) {
+    @DeleteMapping("/remove/{id}")
+    public ResponseEntity<Result<Void>> remove(@PathVariable("id") final Integer id) {
+        final Movie movie = new Movie();
+        movie.setId(id);
         return processResult(movieFacade.remove(movie));
     }
 

@@ -132,17 +132,18 @@ public class SeasonController extends AbstractCatalogController {
      * <br>
      * Validation errors:
      * <ul>
-     * <li>Season is null</li>
      * <li>ID is null</li>
      * <li>Season doesn't exist in season storage</li>
      * </ul>
      *
      * @param showId show ID
-     * @param season season
+     * @param id     ID
      * @return result with validation errors
      */
-    @DeleteMapping("/remove")
-    public ResponseEntity<Result<Void>> remove(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @RequestBody final Season season) {
+    @DeleteMapping("/remove/{id}")
+    public ResponseEntity<Result<Void>> remove(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, @PathVariable("id") final Integer id) {
+        final Season season = new Season();
+        season.setId(id);
         return processResult(seasonFacade.remove(season));
     }
 

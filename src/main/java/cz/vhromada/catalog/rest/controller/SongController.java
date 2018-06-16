@@ -123,17 +123,19 @@ public class SongController extends AbstractCatalogController {
      * <br>
      * Validation errors:
      * <ul>
-     * <li>Song is null</li>
      * <li>ID is null</li>
      * <li>Song doesn't exist in song storage</li>
      * </ul>
      *
      * @param musicId music ID
-     * @param song    song
+     * @param id      ID
      * @return result with validation errors
      */
-    @DeleteMapping("/remove")
-    public ResponseEntity<Result<Void>> remove(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, @RequestBody final Song song) {
+    @DeleteMapping("/remove/{id}")
+    public ResponseEntity<Result<Void>> remove(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId,
+        @PathVariable("id") final Integer id) {
+        final Song song = new Song();
+        song.setId(id);
         return processResult(songFacade.remove(song));
     }
 

@@ -130,19 +130,20 @@ public class EpisodeController extends AbstractCatalogController {
      * <br>
      * Validation errors:
      * <ul>
-     * <li>Episode is null</li>
      * <li>ID is null</li>
      * <li>Episode doesn't exist in season storage</li>
      * </ul>
      *
      * @param showId   show ID
      * @param seasonId season ID
-     * @param episode  episode
+     * @param id       ID
      * @return result with validation errors
      */
-    @DeleteMapping("/remove")
+    @DeleteMapping("/remove/{id}")
     public ResponseEntity<Result<Void>> remove(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
-        @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @RequestBody final Episode episode) {
+        @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, @PathVariable("id") final Integer id) {
+        final Episode episode = new Episode();
+        episode.setId(id);
         return processResult(episodeFacade.remove(episode));
     }
 

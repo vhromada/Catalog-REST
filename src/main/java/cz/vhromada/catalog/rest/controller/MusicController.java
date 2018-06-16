@@ -140,16 +140,17 @@ public class MusicController extends AbstractCatalogController {
      * <br>
      * Validation errors:
      * <ul>
-     * <li>Music is null</li>
      * <li>ID is null</li>
      * <li>Music doesn't exist in data storage</li>
      * </ul>
      *
-     * @param music music
+     * @param id ID
      * @return result with validation errors
      */
-    @DeleteMapping("/remove")
-    public ResponseEntity<Result<Void>> remove(@RequestBody final Music music) {
+    @DeleteMapping("/remove/{id}")
+    public ResponseEntity<Result<Void>> remove(@PathVariable("id") final Integer id) {
+        final Music music = new Music();
+        music.setId(id);
         return processResult(musicFacade.remove(music));
     }
 

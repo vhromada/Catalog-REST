@@ -138,16 +138,17 @@ public class GameController extends AbstractCatalogController {
      * <br>
      * Validation errors:
      * <ul>
-     * <li>Game is null</li>
      * <li>ID is null</li>
      * <li>Game doesn't exist in data storage</li>
      * </ul>
      *
-     * @param game game
+     * @param id ID
      * @return result with validation errors
      */
-    @DeleteMapping("/remove")
-    public ResponseEntity<Result<Void>> remove(@RequestBody final Game game) {
+    @DeleteMapping("/remove/{id}")
+    public ResponseEntity<Result<Void>> remove(@PathVariable("id") final Integer id) {
+        final Game game = new Game();
+        game.setId(id);
         return processResult(gameFacade.remove(game));
     }
 

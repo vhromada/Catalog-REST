@@ -138,16 +138,17 @@ public class ProgramController extends AbstractCatalogController {
      * <br>
      * Validation errors:
      * <ul>
-     * <li>Program is null</li>
      * <li>ID is null</li>
      * <li>Program doesn't exist in data storage</li>
      * </ul>
      *
-     * @param program program
+     * @param id ID
      * @return result with validation errors
      */
-    @DeleteMapping("/remove")
-    public ResponseEntity<Result<Void>> remove(@RequestBody final Program program) {
+    @DeleteMapping("/remove/{id}")
+    public ResponseEntity<Result<Void>> remove(@PathVariable("id") final Integer id) {
+        final Program program = new Program();
+        program.setId(id);
         return processResult(programFacade.remove(program));
     }
 

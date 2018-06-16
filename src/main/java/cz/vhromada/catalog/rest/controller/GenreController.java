@@ -128,16 +128,17 @@ public class GenreController extends AbstractCatalogController {
      * <br>
      * Validation errors:
      * <ul>
-     * <li>Genre is null</li>
      * <li>ID is null</li>
      * <li>Genre doesn't exist in data storage</li>
      * </ul>
      *
-     * @param genre genre
+     * @param id ID
      * @return result with validation errors
      */
-    @DeleteMapping("/remove")
-    public ResponseEntity<Result<Void>> remove(@RequestBody final Genre genre) {
+    @DeleteMapping("/remove/{id}")
+    public ResponseEntity<Result<Void>> remove(@PathVariable("id") final Integer id) {
+        final Genre genre = new Genre();
+        genre.setId(id);
         return processResult(genreFacade.remove(genre));
     }
 

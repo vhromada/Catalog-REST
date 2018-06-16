@@ -158,16 +158,17 @@ public class ShowController extends AbstractCatalogController {
      * <br>
      * Validation errors:
      * <ul>
-     * <li>Show is null</li>
      * <li>ID is null</li>
      * <li>Show doesn't exist in data storage</li>
      * </ul>
      *
-     * @param show show
+     * @param id ID
      * @return result with validation errors
      */
-    @DeleteMapping("/remove")
-    public ResponseEntity<Result<Void>> remove(@RequestBody final Show show) {
+    @DeleteMapping("/remove/{id}")
+    public ResponseEntity<Result<Void>> remove(@PathVariable("id") final Integer id) {
+        final Show show = new Show();
+        show.setId(id);
         return processResult(showFacade.remove(show));
     }
 
