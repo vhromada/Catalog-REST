@@ -7,12 +7,12 @@
     <parent>
         <groupId>cz.vhromada.maven</groupId>
         <artifactId>parent</artifactId>
-        <version>2.0.1</version>
+        <version>2.0.2</version>
     </parent>
 
     <groupId>cz.vhromada.catalog</groupId>
     <artifactId>catalog-rest</artifactId>
-    <version>3.2.3</version>
+    <version>3.2.4</version>
 
     <name>Catalog REST</name>
     <packaging>war</packaging>
@@ -46,7 +46,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>catalog</artifactId>
-            <version>6.2.1</version>
+            <version>6.2.2</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
