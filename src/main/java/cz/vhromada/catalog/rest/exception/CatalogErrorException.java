@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.rest.exception;
 
-import cz.vhromada.result.Result;
+import cz.vhromada.validation.result.Result;
 
 import org.springframework.http.HttpStatus;
 

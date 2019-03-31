@@ -5,7 +5,7 @@ import java.util.List;
 import cz.vhromada.catalog.entity.Episode;
 import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.facade.EpisodeFacade;
-import cz.vhromada.result.Result;
+import cz.vhromada.validation.result.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -226,7 +226,7 @@ public class EpisodeController extends AbstractCatalogController {
      * @param seasonId season ID
      * @return result with list of episodes or validation error
      */
-    @GetMapping({ "", "/list" })
+    @GetMapping
     public ResponseEntity<Result<List<Episode>>> findEpisodesBySeason(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
         @PathVariable("seasonId") final Integer seasonId) {
         final Season season = new Season();

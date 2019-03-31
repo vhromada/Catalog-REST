@@ -1,7 +1,7 @@
 package cz.vhromada.catalog.rest.controller;
 
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Status;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

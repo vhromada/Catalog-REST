@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import cz.vhromada.common.Language;
-import cz.vhromada.result.Result;
+import cz.vhromada.validation.result.Result;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +25,7 @@ public class LanguageController extends AbstractCatalogController {
      *
      * @return result with list of languages
      */
-    @GetMapping({ "", "/list" })
+    @GetMapping
     public ResponseEntity<Result<List<Language>>> getLanguages() {
         return processResult(Result.of(Arrays.asList(Language.values())));
     }

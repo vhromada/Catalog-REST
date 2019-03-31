@@ -5,8 +5,8 @@ import java.util.List;
 import cz.vhromada.catalog.entity.Movie;
 import cz.vhromada.catalog.facade.MovieFacade;
 import cz.vhromada.common.Time;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -63,7 +63,7 @@ public class MovieController extends AbstractCatalogController {
      *
      * @return result with list of movies
      */
-    @GetMapping({ "", "/list" })
+    @GetMapping
     public ResponseEntity<Result<List<Movie>>> getMovies() {
         return processResult(movieFacade.getAll());
     }

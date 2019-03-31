@@ -4,7 +4,7 @@ import java.util.List;
 
 import cz.vhromada.catalog.entity.Program;
 import cz.vhromada.catalog.facade.ProgramFacade;
-import cz.vhromada.result.Result;
+import cz.vhromada.validation.result.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -61,7 +61,7 @@ public class ProgramController extends AbstractCatalogController {
      *
      * @return result with list of programs
      */
-    @GetMapping({ "", "/list" })
+    @GetMapping
     public ResponseEntity<Result<List<Program>>> getPrograms() {
         return processResult(programFacade.getAll());
     }

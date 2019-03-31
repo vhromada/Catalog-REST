@@ -1,7 +1,7 @@
 package cz.vhromada.catalog.rest;
 
 import cz.vhromada.catalog.rest.exception.CatalogErrorException;
-import cz.vhromada.result.Result;
+import cz.vhromada.validation.result.Result;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

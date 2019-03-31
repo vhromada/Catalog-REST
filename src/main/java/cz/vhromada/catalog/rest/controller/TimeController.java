@@ -1,7 +1,7 @@
 package cz.vhromada.catalog.rest.controller;
 
 import cz.vhromada.common.Time;
-import cz.vhromada.result.Result;
+import cz.vhromada.validation.result.Result;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

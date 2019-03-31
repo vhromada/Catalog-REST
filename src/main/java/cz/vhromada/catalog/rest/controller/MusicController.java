@@ -5,8 +5,8 @@ import java.util.List;
 import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.facade.MusicFacade;
 import cz.vhromada.common.Time;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -63,7 +63,7 @@ public class MusicController extends AbstractCatalogController {
      *
      * @return result with list of music
      */
-    @GetMapping({ "", "/list" })
+    @GetMapping
     public ResponseEntity<Result<List<Music>>> getMusic() {
         return processResult(musicFacade.getAll());
     }

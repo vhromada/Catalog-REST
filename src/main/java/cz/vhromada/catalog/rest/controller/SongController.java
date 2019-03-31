@@ -5,7 +5,7 @@ import java.util.List;
 import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.entity.Song;
 import cz.vhromada.catalog.facade.SongFacade;
-import cz.vhromada.result.Result;
+import cz.vhromada.validation.result.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -211,7 +211,7 @@ public class SongController extends AbstractCatalogController {
      * @param musicId music ID
      * @return result with list of songs or validation error
      */
-    @GetMapping({ "", "/list" })
+    @GetMapping
     public ResponseEntity<Result<List<Song>>> findSongsByMusic(@PathVariable("musicId") final Integer musicId) {
         final Music music = new Music();
         music.setId(musicId);

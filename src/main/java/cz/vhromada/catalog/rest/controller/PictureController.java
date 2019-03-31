@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import cz.vhromada.catalog.entity.Picture;
 import cz.vhromada.catalog.facade.PictureFacade;
 import cz.vhromada.catalog.rest.exception.CatalogErrorException;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -69,7 +69,7 @@ public class PictureController extends AbstractCatalogController {
      *
      * @return result with list of pictures
      */
-    @GetMapping({ "", "/list" })
+    @GetMapping
     public ResponseEntity<Result<List<Integer>>> getPictures() {
         final Result<List<Picture>> pictures = pictureFacade.getAll();
 

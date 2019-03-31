@@ -5,7 +5,7 @@ import java.util.List;
 import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.facade.SeasonFacade;
-import cz.vhromada.result.Result;
+import cz.vhromada.validation.result.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -219,7 +219,7 @@ public class SeasonController extends AbstractCatalogController {
      * @param showId show ID
      * @return result with list of seasons or validation error
      */
-    @GetMapping({ "", "/list" })
+    @GetMapping
     public ResponseEntity<Result<List<Season>>> findSeasonsByShow(@PathVariable("showId") final Integer showId) {
         final Show show = new Show();
         show.setId(showId);
