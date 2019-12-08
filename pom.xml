@@ -7,12 +7,12 @@
     <parent>
         <groupId>cz.vhromada.maven</groupId>
         <artifactId>parent</artifactId>
-        <version>2.1.1</version>
+        <version>3.0.1</version>
     </parent>
 
     <groupId>cz.vhromada.catalog</groupId>
     <artifactId>catalog-rest</artifactId>
-    <version>3.3.1</version>
+    <version>4.0.0</version>
 
     <name>Catalog REST</name>
     <packaging>war</packaging>
@@ -42,11 +42,29 @@
         <url>git@github.com:vhromada/Catalog-REST.git</url>
     </scm>
 
+    <properties>
+        <catalog.version>8.0.0</catalog.version>
+        <common.version>3.0.1</common.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>catalog</artifactId>
-            <version>7.0.1</version>
+            <version>${catalog.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cz.vhromada.common</groupId>
+            <artifactId>web</artifactId>
+            <version>${common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-kotlin</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -67,23 +85,40 @@
             <artifactId>springfox-bean-validators</artifactId>
         </dependency>
         <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>cz.vhromada.common</groupId>
+            <artifactId>test</artifactId>
+            <version>${common.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test-junit5</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
         <finalName>Catalog</finalName>
+        <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+        <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
