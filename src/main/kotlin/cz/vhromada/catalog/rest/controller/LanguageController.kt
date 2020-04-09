@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.rest.controller
 
-import cz.vhromada.common.Language
+import cz.vhromada.common.entity.Language
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController

@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.rest.controller
 
-import cz.vhromada.common.Time
+import cz.vhromada.common.entity.Time
 import cz.vhromada.common.web.exception.InputException
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
